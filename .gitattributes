@@ -1,7 +1,0 @@
-# Set line ending normalization
-# *.txt   text eol=lf      # Treat files with .txt extension as text files with LF (Unix-style) line endings
-# *.csv   text eol=crlf    # Treat files with .csv extension as text files with CRLF (Windows-style) line endings
-
-# Go Project
-*.sql linguist-language=GO
-*.html linguist-language=GO
