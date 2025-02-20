@@ -1,0 +1,3 @@
+syntax = "proto3";
+package openim.wiseengage.customerservice;
+option go_package = "github.com/openimsdk/wiseengage/pkg/protocol/customerservice";
