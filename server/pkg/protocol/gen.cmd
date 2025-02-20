@@ -2,11 +2,11 @@
 setlocal
 
 rem Define array elements
-set "PROTO_NAMES=admin chat common"
+set "PROTO_NAMES=customerservice"
 
 rem Loop through each element in the array
 for %%i in (%PROTO_NAMES%) do (
-    protoc --go_out=./%%i --go_opt=module=github.com/openimsdk/chat/pkg/protocol/%%i %%i/%%i.proto
+    protoc --go_out=./%%i --go_opt=module=github.com/openimsdk/wiseengage/server/pkg/protocol/%%i %%i/%%i.proto
     if ERRORLEVEL 1 (
         echo error processing %%i.proto
         exit /b %ERRORLEVEL%
@@ -16,7 +16,7 @@ for %%i in (%PROTO_NAMES%) do (
 rem Generate Go-grpc code
 
 for %%i in (%PROTO_NAMES%) do (
-    protoc --go-grpc_out=./%%i --go-grpc_opt=module=github.com/openimsdk/chat/pkg/protocol/%%i %%i/%%i.proto
+    protoc --go-grpc_out=./%%i --go-grpc_opt=module=github.com/openimsdk/wiseengage/server/pkg/protocol/%%i %%i/%%i.proto
     if ERRORLEVEL 1 (
         echo error processing %%i.proto
         exit /b %ERRORLEVEL%

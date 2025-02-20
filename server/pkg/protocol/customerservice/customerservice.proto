@@ -1,3 +1,18 @@
 syntax = "proto3";
 package openim.wiseengage.customerservice;
-option go_package = "github.com/openimsdk/wiseengage/pkg/protocol/customerservice";
+option go_package = "github.com/openimsdk/wiseengage/server/pkg/protocol/customerservice";
+
+
+message RegisterCustomerReq {
+  string NickName = 1;
+  string FaceURL = 2;
+  string Ex = 3;
+}
+
+message RegisterCustomerResp {
+  string userID = 1;
+}
+
+service customerservice {
+  rpc RegisterCustomer (RegisterCustomerReq) returns (RegisterCustomerResp);
+}
