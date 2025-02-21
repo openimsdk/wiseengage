@@ -5,3 +5,12 @@ const (
 	KUBERNETES          = "kubernetes"
 	ETCD                = "etcd"
 )
+
+const (
+	ConversationStatusClosed = 0
+	ConversationStatusOpen   = 1
+)
+
+const (
+	ConversationRoleRobot = "robot"
+)

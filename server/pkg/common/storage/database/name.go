@@ -1,6 +1,8 @@
 package database
 
 const (
-	AgentName = "agents"
-	UserName  = "user"
+	Prefix           = "wiseengage_"
+	AgentName        = "agents"
+	UserName         = "user"
+	ConversationName = "conversation"
 )

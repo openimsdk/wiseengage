@@ -1,6 +1,6 @@
 syntax = "proto3";
 package openim.wiseengage.customerservice;
-option go_package = "github.com/openimsdk/wiseengage/server/pkg/protocol/customerservice";
+option go_package = "github.com/openimsdk/wiseengage/v1/pkg/protocol/customerservice";
 
 
 message RegisterCustomerReq {
@@ -13,6 +13,29 @@ message RegisterCustomerResp {
   string userID = 1;
 }
 
+message StartConsultationReq {
+  string userID = 1;
+}
+
+message StartConsultationResp {
+  string conversationID = 1;
+}
+
+message UpdateSendMsgTimeReq {
+  string userID = 1;
+  string conversationID = 2;
+  int64 sendMsgSeq = 3;
+  int64 sendMsgTime = 4;
+  string sendUserID = 5;
+}
+
+message UpdateSendMsgTimeResp {
+}
+
 service customerservice {
   rpc RegisterCustomer (RegisterCustomerReq) returns (RegisterCustomerResp);
+
+  rpc StartConsultation(StartConsultationReq) returns (StartConsultationResp);
+
+  rpc UpdateSendMsgTime(UpdateSendMsgTimeReq) returns (UpdateSendMsgTimeResp);
 }
