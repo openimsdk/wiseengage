@@ -1,4 +1,4 @@
-module wiseengage
+module github.com/openimsdk/wiseengage/v1
 
 go 1.23.2
 

@@ -3,7 +3,7 @@ package database
 import (
 	"context"
 
-	"wiseengage/server/pkg/common/storage/model"
+	"github.com/openimsdk/wiseengage/v1/pkg/common/storage/model"
 )
 
 type Seat interface {
