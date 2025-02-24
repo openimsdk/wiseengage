@@ -19,9 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Customerservice_RegisterCustomer_FullMethodName  = "/openim.wiseengage.customerservice.customerservice/RegisterCustomer"
-	Customerservice_StartConsultation_FullMethodName = "/openim.wiseengage.customerservice.customerservice/StartConsultation"
-	Customerservice_UpdateSendMsgTime_FullMethodName = "/openim.wiseengage.customerservice.customerservice/UpdateSendMsgTime"
+	Customerservice_RegisterCustomer_FullMethodName         = "/openim.wiseengage.customerservice.customerservice/RegisterCustomer"
+	Customerservice_StartConsultation_FullMethodName        = "/openim.wiseengage.customerservice.customerservice/StartConsultation"
+	Customerservice_UpdateSendMsgTime_FullMethodName        = "/openim.wiseengage.customerservice.customerservice/UpdateSendMsgTime"
+	Customerservice_UpdateConversationClosed_FullMethodName = "/openim.wiseengage.customerservice.customerservice/UpdateConversationClosed"
+	Customerservice_ChangeConversationRole_FullMethodName   = "/openim.wiseengage.customerservice.customerservice/ChangeConversationRole"
 )
 
 // CustomerserviceClient is the client API for Customerservice service.
@@ -31,6 +33,8 @@ type CustomerserviceClient interface {
 	RegisterCustomer(ctx context.Context, in *RegisterCustomerReq, opts ...grpc.CallOption) (*RegisterCustomerResp, error)
 	StartConsultation(ctx context.Context, in *StartConsultationReq, opts ...grpc.CallOption) (*StartConsultationResp, error)
 	UpdateSendMsgTime(ctx context.Context, in *UpdateSendMsgTimeReq, opts ...grpc.CallOption) (*UpdateSendMsgTimeResp, error)
+	UpdateConversationClosed(ctx context.Context, in *UpdateConversationClosedReq, opts ...grpc.CallOption) (*UpdateConversationClosedResp, error)
+	ChangeConversationRole(ctx context.Context, in *ChangeConversationRoleReq, opts ...grpc.CallOption) (*ChangeConversationRoleResp, error)
 }
 
 type customerserviceClient struct {
@@ -71,6 +75,26 @@ func (c *customerserviceClient) UpdateSendMsgTime(ctx context.Context, in *Updat
 	return out, nil
 }
 
+func (c *customerserviceClient) UpdateConversationClosed(ctx context.Context, in *UpdateConversationClosedReq, opts ...grpc.CallOption) (*UpdateConversationClosedResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateConversationClosedResp)
+	err := c.cc.Invoke(ctx, Customerservice_UpdateConversationClosed_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *customerserviceClient) ChangeConversationRole(ctx context.Context, in *ChangeConversationRoleReq, opts ...grpc.CallOption) (*ChangeConversationRoleResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ChangeConversationRoleResp)
+	err := c.cc.Invoke(ctx, Customerservice_ChangeConversationRole_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CustomerserviceServer is the server API for Customerservice service.
 // All implementations must embed UnimplementedCustomerserviceServer
 // for forward compatibility.
@@ -78,6 +102,8 @@ type CustomerserviceServer interface {
 	RegisterCustomer(context.Context, *RegisterCustomerReq) (*RegisterCustomerResp, error)
 	StartConsultation(context.Context, *StartConsultationReq) (*StartConsultationResp, error)
 	UpdateSendMsgTime(context.Context, *UpdateSendMsgTimeReq) (*UpdateSendMsgTimeResp, error)
+	UpdateConversationClosed(context.Context, *UpdateConversationClosedReq) (*UpdateConversationClosedResp, error)
+	ChangeConversationRole(context.Context, *ChangeConversationRoleReq) (*ChangeConversationRoleResp, error)
 	mustEmbedUnimplementedCustomerserviceServer()
 }
 
@@ -96,6 +122,12 @@ func (UnimplementedCustomerserviceServer) StartConsultation(context.Context, *St
 }
 func (UnimplementedCustomerserviceServer) UpdateSendMsgTime(context.Context, *UpdateSendMsgTimeReq) (*UpdateSendMsgTimeResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateSendMsgTime not implemented")
+}
+func (UnimplementedCustomerserviceServer) UpdateConversationClosed(context.Context, *UpdateConversationClosedReq) (*UpdateConversationClosedResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateConversationClosed not implemented")
+}
+func (UnimplementedCustomerserviceServer) ChangeConversationRole(context.Context, *ChangeConversationRoleReq) (*ChangeConversationRoleResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ChangeConversationRole not implemented")
 }
 func (UnimplementedCustomerserviceServer) mustEmbedUnimplementedCustomerserviceServer() {}
 func (UnimplementedCustomerserviceServer) testEmbeddedByValue()                         {}
@@ -172,6 +204,42 @@ func _Customerservice_UpdateSendMsgTime_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Customerservice_UpdateConversationClosed_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateConversationClosedReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CustomerserviceServer).UpdateConversationClosed(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Customerservice_UpdateConversationClosed_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CustomerserviceServer).UpdateConversationClosed(ctx, req.(*UpdateConversationClosedReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Customerservice_ChangeConversationRole_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ChangeConversationRoleReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CustomerserviceServer).ChangeConversationRole(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Customerservice_ChangeConversationRole_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CustomerserviceServer).ChangeConversationRole(ctx, req.(*ChangeConversationRoleReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Customerservice_ServiceDesc is the grpc.ServiceDesc for Customerservice service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -190,6 +258,14 @@ var Customerservice_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateSendMsgTime",
 			Handler:    _Customerservice_UpdateSendMsgTime_Handler,
+		},
+		{
+			MethodName: "UpdateConversationClosed",
+			Handler:    _Customerservice_UpdateConversationClosed_Handler,
+		},
+		{
+			MethodName: "ChangeConversationRole",
+			Handler:    _Customerservice_ChangeConversationRole_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

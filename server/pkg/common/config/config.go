@@ -205,3 +205,16 @@ func (a *AllConfig) GetConfigNames() []string {
 		ChatRPCChatCfgFileName,
 	}
 }
+
+type Message struct {
+	ContentType int32  `yaml:"contentType"`
+	Content     string `yaml:"content"`
+}
+
+type Customer struct {
+	Msg struct {
+		Start   []Message `yaml:"start"`
+		Closed  []Message `yaml:"closed"`
+		Timeout []Message `yaml:"timeout"`
+	} `yaml:"msg"`
+}
