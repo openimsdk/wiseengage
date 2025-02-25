@@ -1,0 +1,11 @@
+syntax = "proto3";
+package openim.wiseengage.common;
+option go_package = "github.com/openimsdk/wiseengage/v1/pkg/protocol/common";
+
+message Customer{
+  string UserID = 1;
+  string NickName = 2;
+  string FaceURL = 3;
+  string Ex = 4;
+  int64 CreateTime = 5;
+}

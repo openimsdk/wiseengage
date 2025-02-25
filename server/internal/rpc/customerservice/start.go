@@ -23,6 +23,7 @@ func Start(ctx context.Context, config *Config, client discovery.SvcDiscoveryReg
 type customerService struct {
 	customerservice.UnimplementedCustomerserviceServer
 	db          controller.CustomerDatabase
+	userCli     *rpcli.UserClient
 	groupCli    *rpcli.GroupClient
 	msgCli      *rpcli.MsgClient
 	robotUserID string

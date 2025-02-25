@@ -4,11 +4,11 @@ option go_package = "github.com/openimsdk/wiseengage/v1/pkg/protocol/customerser
 
 
 message RegisterCustomerReq {
-  string NickName = 1;
-  string FaceURL = 2;
-  string Ex = 3;
+  string userID = 1;
+  string NickName = 2;
+  string FaceURL = 3;
+  string Ex = 4;
 }
-
 message RegisterCustomerResp {
   string userID = 1;
 }
