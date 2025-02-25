@@ -32,10 +32,37 @@ message UpdateSendMsgTimeReq {
 message UpdateSendMsgTimeResp {
 }
 
+message UpdateConversationClosedReq {
+  string userID = 1;
+  string conversationID = 2;
+  int64 version = 3;
+  bool timeout = 4;
+  string cause = 5;
+}
+
+message UpdateConversationClosedResp {
+}
+
+message ChangeConversationRoleReq {
+  string userID = 1;
+  string conversationID = 2;
+  string role = 3;
+}
+
+message ChangeConversationRoleResp {
+  string userID = 1;
+  string conversationID = 2;
+  string role = 3;
+}
+
 service customerservice {
   rpc RegisterCustomer (RegisterCustomerReq) returns (RegisterCustomerResp);
 
   rpc StartConsultation(StartConsultationReq) returns (StartConsultationResp);
 
   rpc UpdateSendMsgTime(UpdateSendMsgTimeReq) returns (UpdateSendMsgTimeResp);
+
+  rpc UpdateConversationClosed(UpdateConversationClosedReq) returns (UpdateConversationClosedResp);
+
+  rpc ChangeConversationRole(ChangeConversationRoleReq) returns (ChangeConversationRoleResp);
 }

@@ -1,0 +1,14 @@
+
+
+
+msg:
+  start:
+    - contentType: 101
+      content: {"content":"welcome"}
+  close:
+    - contentType: 101
+      content: { "content": "processing completed" }
+  timeout:
+    - contentType: 101
+      content: { "content": "processing completed" }
+

@@ -22,8 +22,10 @@ func IsDuplicateKeyError(err error) bool {
 type CustomerDatabase interface {
 	TakeConversationByUserID(ctx context.Context, userID string) (*model.Conversation, error)
 	CreateConversation(ctx context.Context, conversation *model.Conversation) error
-	UpdateConversationStatus(ctx context.Context, userID string, conversationID string, status int, role string, version int) (bool, error)
 	UpdateConversationLastMsg(ctx context.Context, userID string, conversationID string, lastMsg *model.LastMessage) error
+	UpdateConversationStatusOpen(ctx context.Context, userID string, conversationID string, version int, role string) (bool, error)
+	UpdateConversationStatusClosed(ctx context.Context, userID string, conversationID string, version int, cause string) (bool, error)
+	UpdateConversationRole(ctx context.Context, userID string, conversationID string, version int, role string) (bool, error)
 
 	CustomerCreate(ctx context.Context, customers []*model.Customer) (err error)
 	CustomerUpdateByMap(ctx context.Context, customerID string, args map[string]any) (err error)
@@ -37,28 +39,31 @@ type customerDatabase struct {
 	conversationDB database.Conversation
 }
 
-func NewCustomerDatabase(customerDB database.Customer, tx tx.Tx) CustomerDatabase {
-	return &customerDatabase{customerDB: customerDB, tx: tx}
+func NewCustomerDatabase(CustomerDB database.Customer, tx tx.Tx) CustomerDatabase {
+	return &customerDatabase{customerDB: CustomerDB, tx: tx}
 }
 
-func (c *customerDatabase) TakeConversationByUserID(ctx context.Context, userID string) (*model.Conversation, error) {
-	//TODO implement me
-	panic("implement me")
+func (u *customerDatabase) TakeConversationByUserID(ctx context.Context, userID string) (*model.Conversation, error) {
+	return u.conversationDB.TakeByUserID(ctx, userID)
 }
 
-func (c *customerDatabase) CreateConversation(ctx context.Context, conversation *model.Conversation) error {
-	//TODO implement me
-	panic("implement me")
+func (u *customerDatabase) CreateConversation(ctx context.Context, conversation *model.Conversation) error {
+	return u.conversationDB.Create(ctx, conversation)
 }
 
-func (c *customerDatabase) UpdateConversationStatus(ctx context.Context, userID string, conversationID string, status int, role string, version int) (bool, error) {
-	//TODO implement me
-	panic("implement me")
+func (u *customerDatabase) UpdateConversationLastMsg(ctx context.Context, userID string, conversationID string, lastMsg *model.LastMessage) error {
+	return u.conversationDB.UpdateLastMsg(ctx, userID, conversationID, lastMsg)
+}
+func (u *customerDatabase) UpdateConversationStatusOpen(ctx context.Context, userID string, conversationID string, version int, role string) (bool, error) {
+	return u.conversationDB.SetStatusOpen(ctx, userID, conversationID, version, role)
 }
 
-func (c *customerDatabase) UpdateConversationLastMsg(ctx context.Context, userID string, conversationID string, lastMsg *model.LastMessage) error {
-	//TODO implement me
-	panic("implement me")
+func (u *customerDatabase) UpdateConversationStatusClosed(ctx context.Context, userID string, conversationID string, version int, cause string) (bool, error) {
+	return u.conversationDB.SetStatusClosed(ctx, userID, conversationID, version, cause)
+}
+
+func (u *customerDatabase) UpdateConversationRole(ctx context.Context, userID string, conversationID string, version int, role string) (bool, error) {
+	return u.conversationDB.SetRole(ctx, userID, conversationID, version, role)
 }
 
 // CustomerCreate Insert multiple external guarantees that the customerID is not repeated and does not exist in the storage.
