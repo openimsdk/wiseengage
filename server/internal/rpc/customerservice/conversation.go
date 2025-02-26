@@ -121,9 +121,9 @@ func (o *customerService) sendMsg(ctx context.Context, conversationID string, ms
 
 func (o *customerService) UpdateSendMsgTime(ctx context.Context, req *pb.UpdateSendMsgTimeReq) (*pb.UpdateSendMsgTimeResp, error) {
 	lastMsg := &model.LastMessage{
-		Seq:        req.SendMsgSeq,
-		SendTime:   time.UnixMilli(req.SendMsgTime),
-		UserID:     req.SendUserID,
+		MsgID:      req.MsgID,
+		SendTime:   time.UnixMilli(req.SendTime),
+		UserID:     req.UserID,
 		UpdateTime: time.Now(),
 	}
 	if err := o.db.UpdateConversationLastMsg(ctx, req.UserID, req.ConversationID, lastMsg); err != nil {

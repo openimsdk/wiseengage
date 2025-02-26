@@ -6,6 +6,8 @@ const (
 	ETCD                = "etcd"
 )
 
+const CtxApiToken = "api-token"
+
 const (
 	ConversationStatusClosed = 0
 	ConversationStatusOpen   = 1

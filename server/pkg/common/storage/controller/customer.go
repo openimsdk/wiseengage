@@ -3,6 +3,7 @@ package controller
 import (
 	"context"
 	"errors"
+	"time"
 
 	"github.com/openimsdk/tools/db/pagination"
 	"github.com/openimsdk/tools/db/tx"
@@ -25,7 +26,10 @@ type CustomerDatabase interface {
 	UpdateConversationLastMsg(ctx context.Context, userID string, conversationID string, lastMsg *model.LastMessage) error
 	UpdateConversationStatusOpen(ctx context.Context, userID string, conversationID string, version int, role string) (bool, error)
 	UpdateConversationStatusClosed(ctx context.Context, userID string, conversationID string, version int, cause string) (bool, error)
+	SetStatusTimeoutClosed(ctx context.Context, userID string, conversationID string, lastMsg *model.LastMessage, cause string) (bool, error)
 	UpdateConversationRole(ctx context.Context, userID string, conversationID string, version int, role string) (bool, error)
+	FindConversationTimeout(ctx context.Context, deadline time.Time, limit int) ([]*model.Conversation, error)
+	FindConversation(ctx context.Context, conversationIDs []string) ([]*model.Conversation, error)
 
 	CustomerCreate(ctx context.Context, customers ...*model.Customer) (err error)
 	CustomerUpdateByMap(ctx context.Context, customerID string, args map[string]any) (err error)
@@ -64,8 +68,20 @@ func (c *customerDatabase) UpdateConversationStatusClosed(ctx context.Context, u
 	return c.conversationDB.SetStatusClosed(ctx, userID, conversationID, version, cause)
 }
 
-func (c *customerDatabase) UpdateConversationRole(ctx context.Context, userID string, conversationID string, version int, role string) (bool, error) {
-	return c.conversationDB.SetRole(ctx, userID, conversationID, version, role)
+func (u *customerDatabase) SetStatusTimeoutClosed(ctx context.Context, userID string, conversationID string, lastMsg *model.LastMessage, cause string) (bool, error) {
+	return u.conversationDB.SetStatusTimeoutClosed(ctx, userID, conversationID, lastMsg, cause)
+}
+
+func (u *customerDatabase) UpdateConversationRole(ctx context.Context, userID string, conversationID string, version int, role string) (bool, error) {
+	return u.conversationDB.SetRole(ctx, userID, conversationID, version, role)
+}
+
+func (u *customerDatabase) FindConversationTimeout(ctx context.Context, deadline time.Time, limit int) ([]*model.Conversation, error) {
+	return u.conversationDB.FindTimeout(ctx, deadline, limit)
+}
+
+func (u *customerDatabase) FindConversation(ctx context.Context, conversationIDs []string) ([]*model.Conversation, error) {
+	return u.conversationDB.Find(ctx, conversationIDs)
 }
 
 // CustomerCreate Insert multiple external guarantees that the customerID is not repeated and does not exist in the storage.

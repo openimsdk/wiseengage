@@ -5,10 +5,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"wiseengage/pkg/common/constant"
-
 	"github.com/mitchellh/mapstructure"
 	"github.com/openimsdk/tools/errs"
+	"github.com/openimsdk/wiseengage/v1/pkg/common/constant"
 	"github.com/spf13/viper"
 )
 

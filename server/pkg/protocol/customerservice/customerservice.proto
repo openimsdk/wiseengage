@@ -22,11 +22,10 @@ message StartConsultationResp {
 }
 
 message UpdateSendMsgTimeReq {
-  string userID = 1;
-  string conversationID = 2;
-  int64 sendMsgSeq = 3;
-  int64 sendMsgTime = 4;
-  string sendUserID = 5;
+  string conversationID = 1;
+  string userID = 2;
+  string msgID = 3;
+  int64 sendTime = 4;
 }
 
 message UpdateSendMsgTimeResp {

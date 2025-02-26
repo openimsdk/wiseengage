@@ -5,7 +5,7 @@ import (
 )
 
 type LastMessage struct {
-	Seq        int64     `bson:"seq"`
+	MsgID      string    `bson:"msg_id"`
 	SendTime   time.Time `bson:"send_time"`
 	UserID     string    `bson:"user_id"`
 	UpdateTime time.Time `bson:"update_time"`

@@ -37,7 +37,7 @@ func (r *RpcService) GetServiceNames() []string {
 type API struct {
 	Api struct {
 		ListenIP string `mapstructure:"listenIP"`
-		Ports    []int  `mapstructure:"ports"`
+		Port     int    `mapstructure:"port"`
 	} `mapstructure:"api"`
 }
 
