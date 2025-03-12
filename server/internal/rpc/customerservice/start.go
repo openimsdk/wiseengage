@@ -4,20 +4,38 @@ import (
 	"context"
 
 	"github.com/openimsdk/tools/discovery"
+	"github.com/openimsdk/wiseengage/v1/pkg/common/cmd"
 	"github.com/openimsdk/wiseengage/v1/pkg/common/config"
+	"github.com/openimsdk/wiseengage/v1/pkg/common/dbbuild"
 	"github.com/openimsdk/wiseengage/v1/pkg/common/storage/controller"
+	"github.com/openimsdk/wiseengage/v1/pkg/common/storage/database/mgo"
 	"github.com/openimsdk/wiseengage/v1/pkg/protocol/customerservice"
 	"github.com/openimsdk/wiseengage/v1/pkg/rpcli"
-	"google.golang.org/grpc"
 )
 
 type Config struct {
-	Config config.Customer
+	Discovery     config.Discovery
+	Config        config.Customer
+	RedisConfig   config.Redis
+	MongodbConfig config.Mongo
 }
 
-func Start(ctx context.Context, config *Config, client discovery.SvcDiscoveryRegistry, server *grpc.Server) error {
-
-	return nil
+func Start(ctx context.Context, config *Config, client discovery.SvcDiscoveryRegistry) (cmd.BlockTasks, error) {
+	dbb := dbbuild.NewBuilder(&config.MongodbConfig, &config.RedisConfig)
+	mgocli, err := dbb.Mongo(ctx)
+	if err != nil {
+		return nil, err
+	}
+	customer, err := mgo.NewCustomer(mgocli.GetDB())
+	if err != nil {
+		return nil, err
+	}
+	srv := &customerService{
+		db: controller.NewCustomerDatabase(customer, mgocli.GetTx()),
+	}
+	return func() error {
+		return cmd.RPCServiceRegistrar(ctx, customerservice.RegisterCustomerserviceServer, srv, config.Discovery.RpcService.Customer)
+	}, nil
 }
 
 type customerService struct {

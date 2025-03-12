@@ -1,4 +1,4 @@
-package customerservice
+package customerapi
 
 import (
 	"net"
