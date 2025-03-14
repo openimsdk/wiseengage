@@ -26,8 +26,6 @@ import (
 
 type BlockTasks func() error
 
-type RpcServer[S any] func(r grpc.ServiceRegistrar, srv S)
-
 type StartFunc[C any] func(ctx context.Context, config *C, client discovery.SvcDiscoveryRegistry) (BlockTasks, error)
 
 func Run[C any](fn StartFunc[C]) {
@@ -48,6 +46,8 @@ func Run[C any](fn StartFunc[C]) {
 			return run(fn, configFolder, index)
 		},
 	}
+	cmd.Flags().StringP("config_folder_path", "c", "", "path of config directory")
+	cmd.Flags().IntP("index", "i", 0, "process startup sequence number")
 	if err := cmd.Execute(); err != nil {
 		_, _ = fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
@@ -138,7 +138,7 @@ func parseConfig[C any](configFolder string, index int) (*C, error) {
 	}
 	for i := 0; i < vof.NumField(); i++ {
 		field := vof.Field(i)
-		value := field.Interface()
+		value := field.Addr().Interface()
 		switch value.(type) {
 		case config.Index:
 			field.Set(reflect.ValueOf(config.Index(index)))
@@ -169,6 +169,9 @@ func readConfig(name string, val any) error {
 	v.SetConfigFile(name)
 	opt := func(conf *mapstructure.DecoderConfig) {
 		conf.TagName = config.StructTagName
+	}
+	if err := v.ReadInConfig(); err != nil {
+		return err
 	}
 	if err := v.Unmarshal(val, opt); err != nil {
 		return err

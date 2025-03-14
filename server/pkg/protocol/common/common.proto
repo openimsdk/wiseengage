@@ -9,3 +9,8 @@ message Customer{
   string Ex = 4;
   int64 CreateTime = 5;
 }
+
+message RequestPagination {
+  int32 pageNumber = 1;
+  int32 showNumber = 2;
+}

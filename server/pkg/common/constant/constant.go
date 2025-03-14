@@ -16,3 +16,8 @@ const (
 const (
 	ConversationRoleRobot = "robot"
 )
+
+const (
+	AgentStatusEnable  = "enable"
+	AgentStatusDisable = "disable"
+)

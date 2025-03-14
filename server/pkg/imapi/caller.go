@@ -2,9 +2,10 @@ package imapi
 
 import (
 	"context"
-	"github.com/openimsdk/tools/log"
 	"sync"
 	"time"
+
+	"github.com/openimsdk/tools/log"
 
 	"github.com/openimsdk/tools/utils/jsonutil"
 
@@ -35,6 +36,11 @@ type CallerInterface interface {
 	FindFriendUserIDs(ctx context.Context, userID string) ([]string, error)
 	SendBusinessNotification(ctx context.Context, key string, data any, sendUserID string, recvUserID string) error
 	SendMsg(ctx context.Context, req *SendMsgReq) (*SendMsgResp, error)
+	GetUsers(ctx context.Context, userIDs []string) ([]*sdkws.UserInfo, error)
+	GetFullJoinGroupIDs(ctx context.Context, userID string) ([]string, error)
+	CreateGroup(ctx context.Context, req *group.CreateGroupReq) (*sdkws.GroupInfo, error)
+	GetUserInfo(ctx context.Context, userID string) (*sdkws.UserInfo, error)
+	UserRegister(ctx context.Context, user []*sdkws.UserInfo) ([]*sdkws.UserInfo, error)
 }
 
 type authToken struct {
@@ -43,11 +49,32 @@ type authToken struct {
 }
 
 type Caller struct {
+	CallerInterface
 	imApi           string
 	imSecret        string
 	defaultIMUserID string
 	tokenCache      map[string]*authToken
 	lock            sync.RWMutex
+}
+
+func (c *Caller) UserRegister(ctx context.Context, user []*sdkws.UserInfo) ([]*sdkws.UserInfo, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (c *Caller) GetUserInfo(ctx context.Context, userID string) (*sdkws.UserInfo, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (c *Caller) GetFullJoinGroupIDs(ctx context.Context, userID string) ([]string, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (c *Caller) CreateGroup(ctx context.Context, req *group.CreateGroupReq) (*sdkws.GroupInfo, error) {
+	//TODO implement me
+	panic("implement me")
 }
 
 func New(imApi string, imSecret string, defaultIMUserID string) CallerInterface {
@@ -232,4 +259,8 @@ func (c *Caller) SendBusinessNotification(ctx context.Context, key string, data 
 
 func (c *Caller) SendMsg(ctx context.Context, req *SendMsgReq) (*SendMsgResp, error) {
 	return sendMsg.Call(ctx, c.imApi, req)
+}
+
+func (c *Caller) GetUsers(ctx context.Context, userIDs []string) ([]*sdkws.UserInfo, error) {
+	return nil, nil
 }

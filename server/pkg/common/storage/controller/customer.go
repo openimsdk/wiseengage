@@ -37,16 +37,27 @@ type CustomerDatabase interface {
 	CustomerTake(ctx context.Context, customerID string) (customers *model.Customer, err error)
 	CustomerFind(ctx context.Context, customerIDs []string) (customers []*model.Customer, err error)
 	CustomerExist(ctx context.Context, customerID string) (exist bool, err error)
+
+	CreatAgent(ctx context.Context, agent *model.Agent) error
+	TakeAgent(ctx context.Context, userID string) (*model.Agent, error)
+	UpdateAgent(ctx context.Context, userID string, update map[string]any) error
+	PageAgent(ctx context.Context, types []string, status []string, pagination pagination.Pagination) (int64, []*model.Agent, error)
+	FindAgentType(ctx context.Context, agentType string, status []string) ([]*model.Agent, error)
 }
 
 type customerDatabase struct {
 	tx             tx.Tx
 	customerDB     database.Customer
 	conversationDB database.Conversation
+	agentDB        database.Agent
 }
 
 func NewCustomerDatabase(CustomerDB database.Customer, tx tx.Tx) CustomerDatabase {
 	return &customerDatabase{customerDB: CustomerDB, tx: tx}
+}
+
+func (c *customerDatabase) TakeConversation(ctx context.Context, conversationID string) (*model.Conversation, error) {
+	return c.conversationDB.Take(ctx, conversationID)
 }
 
 func (c *customerDatabase) TakeConversationByUserID(ctx context.Context, userID string) (*model.Conversation, error) {
@@ -120,4 +131,25 @@ func (c *customerDatabase) CustomerExist(ctx context.Context, customerID string)
 		return false, err
 	}
 	return res != nil, nil
+}
+
+func (c *customerDatabase) CreatAgent(ctx context.Context, agent *model.Agent) error {
+	return c.agentDB.Create(ctx, agent)
+}
+
+func (c *customerDatabase) TakeAgent(ctx context.Context, userID string) (*model.Agent, error) {
+	return c.agentDB.Take(ctx, userID)
+}
+
+func (c *customerDatabase) UpdateAgent(ctx context.Context, userID string, update map[string]any) error {
+	return c.agentDB.Update(ctx, userID, update)
+}
+
+func (c *customerDatabase) PageAgent(ctx context.Context, types []string, status []string, pagination pagination.Pagination) (int64, []*model.Agent, error) {
+	return c.agentDB.Page(ctx, types, status, pagination)
+}
+
+func (c *customerDatabase) FindAgentType(ctx context.Context, agentType string, status []string) ([]*model.Agent, error) {
+	return c.agentDB.FindType(ctx, agentType, status)
+
 }

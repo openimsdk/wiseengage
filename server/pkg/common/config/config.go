@@ -217,11 +217,10 @@ type User struct {
 }
 
 type RPC struct {
-	RegisterIP   string `yaml:"registerIP"`
-	ListenIP     string `yaml:"listenIP"`
-	AutoSetPorts bool   `yaml:"autoSetPorts"`
-	Ports        []int  `yaml:"ports"`
-	AuthPort     bool   `yaml:"authPort"`
+	RegisterIP string `yaml:"registerIP"`
+	ListenIP   string `yaml:"listenIP"`
+	Ports      []int  `yaml:"ports"`
+	AutoPort   bool   `yaml:"autoPort"`
 }
 
 type Redis struct {
@@ -614,16 +613,10 @@ func (w *Webhooks) GetConfigFileName() string {
 	return WebhooksConfigFileName
 }
 
-type Message struct {
-	ContentType int32  `yaml:"contentType"`
-	Content     string `yaml:"content"`
-}
-
 type Customer struct {
 	RPC RPC `yaml:"rpc"`
-	Msg struct {
-		Start   []Message `yaml:"start"`
-		Closed  []Message `yaml:"closed"`
-		Timeout []Message `yaml:"timeout"`
-	} `yaml:"msg"`
+}
+
+func (x *Customer) GetConfigFileName() string {
+	return "customer.yml"
 }

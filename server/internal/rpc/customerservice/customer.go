@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/openimsdk/protocol/sdkws"
-	"github.com/openimsdk/protocol/user"
 	"github.com/openimsdk/tools/errs"
 	"github.com/openimsdk/wiseengage/v1/pkg/common/servererrs"
 	"github.com/openimsdk/wiseengage/v1/pkg/common/storage/controller"
@@ -27,7 +26,7 @@ func (o *customerService) RegisterCustomer(ctx context.Context, req *customerser
 		if exist {
 			return nil, servererrs.ErrRegisteredAlready.Wrap()
 		}
-		u, err := o.userCli.GetUserInfo(ctx, req.UserID)
+		u, err := o.imApi.GetUserInfo(ctx, req.UserID)
 		if err != nil {
 			if !errors.Is(err, errs.ErrRecordNotFound) {
 				return nil, err
@@ -45,7 +44,7 @@ func (o *customerService) RegisterCustomer(ctx context.Context, req *customerser
 	}
 
 	if !imReg {
-		_, err := o.userCli.UserRegister(ctx, &user.UserRegisterReq{Users: []*sdkws.UserInfo{
+		_, err := o.imApi.UserRegister(ctx, []*sdkws.UserInfo{
 			{
 				UserID:     req.UserID,
 				Nickname:   req.NickName,
@@ -53,7 +52,7 @@ func (o *customerService) RegisterCustomer(ctx context.Context, req *customerser
 				Ex:         req.Ex,
 				CreateTime: now.UnixMilli(),
 			},
-		}})
+		})
 		if err != nil {
 			return nil, errs.WrapMsg(err, "im register err")
 		}

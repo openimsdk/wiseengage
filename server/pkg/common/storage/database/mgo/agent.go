@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/openimsdk/tools/db/mongoutil"
+	"github.com/openimsdk/tools/db/pagination"
 	"github.com/openimsdk/tools/errs"
 	"github.com/openimsdk/wiseengage/v1/pkg/common/storage/database"
 	"github.com/openimsdk/wiseengage/v1/pkg/common/storage/model"
@@ -13,7 +14,7 @@ import (
 )
 
 func NewAgent(db *mongo.Database) (database.Agent, error) {
-	coll := db.Collection("account")
+	coll := db.Collection("agent")
 	_, err := coll.Indexes().CreateOne(context.Background(), mongo.IndexModel{
 		Keys: bson.D{
 			{Key: "user_id", Value: 1},
@@ -42,6 +43,16 @@ func (o *Agent) Find(ctx context.Context, userIDs []string) ([]*model.Agent, err
 	return mongoutil.Find[*model.Agent](ctx, o.coll, bson.M{"user_id": bson.M{"$in": userIDs}})
 }
 
+func (o *Agent) FindType(ctx context.Context, agentType string, status []string) ([]*model.Agent, error) {
+	filter := bson.M{
+		"type": agentType,
+	}
+	if len(status) > 0 {
+		filter["status"] = bson.M{"$in": status}
+	}
+	return mongoutil.Find[*model.Agent](ctx, o.coll, filter)
+}
+
 func (o *Agent) Update(ctx context.Context, userID string, data map[string]any) error {
 	if len(data) == 0 {
 		return nil
@@ -54,4 +65,15 @@ func (o *Agent) Delete(ctx context.Context, userIDs []string) error {
 		return nil
 	}
 	return mongoutil.DeleteMany(ctx, o.coll, bson.M{"user_id": bson.M{"$in": userIDs}})
+}
+
+func (o *Agent) Page(ctx context.Context, types []string, status []string, pagination pagination.Pagination) (int64, []*model.Agent, error) {
+	filter := bson.M{}
+	if len(types) > 0 {
+		filter["type"] = bson.M{"$in": types}
+	}
+	if len(status) > 0 {
+		filter["status"] = bson.M{"$in": status}
+	}
+	return mongoutil.FindPage[*model.Agent](ctx, o.coll, filter, pagination)
 }

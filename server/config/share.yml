@@ -1,0 +1,22 @@
+secret: openIM123
+
+imAdminUserID: [ imAdmin ]
+
+# 1: For Android, iOS, Windows, Mac, and web platforms, only one instance can be online at a time
+multiLogin:
+  policy: 1
+  # max num of tokens in one end
+  maxNumOneEnd: 30
+  customizeLoginNum:
+    ios: 1
+    android: 1
+    windows: 1
+    osx: 1
+    web: 1
+    miniWeb: 1
+    linux: 1
+    aPad: 1
+    iPad: 1
+    admin: 1
+# isEncryption: whether to enable message encryption
+isEncryption: false

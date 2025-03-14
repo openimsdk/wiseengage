@@ -24,6 +24,9 @@ const (
 	Customerservice_UpdateSendMsgTime_FullMethodName        = "/openim.wiseengage.customerservice.customerservice/UpdateSendMsgTime"
 	Customerservice_UpdateConversationClosed_FullMethodName = "/openim.wiseengage.customerservice.customerservice/UpdateConversationClosed"
 	Customerservice_ChangeConversationRole_FullMethodName   = "/openim.wiseengage.customerservice.customerservice/ChangeConversationRole"
+	Customerservice_CreateAgent_FullMethodName              = "/openim.wiseengage.customerservice.customerservice/CreateAgent"
+	Customerservice_UpdateAgent_FullMethodName              = "/openim.wiseengage.customerservice.customerservice/UpdateAgent"
+	Customerservice_PageFindAgent_FullMethodName            = "/openim.wiseengage.customerservice.customerservice/PageFindAgent"
 )
 
 // CustomerserviceClient is the client API for Customerservice service.
@@ -35,6 +38,9 @@ type CustomerserviceClient interface {
 	UpdateSendMsgTime(ctx context.Context, in *UpdateSendMsgTimeReq, opts ...grpc.CallOption) (*UpdateSendMsgTimeResp, error)
 	UpdateConversationClosed(ctx context.Context, in *UpdateConversationClosedReq, opts ...grpc.CallOption) (*UpdateConversationClosedResp, error)
 	ChangeConversationRole(ctx context.Context, in *ChangeConversationRoleReq, opts ...grpc.CallOption) (*ChangeConversationRoleResp, error)
+	CreateAgent(ctx context.Context, in *CreateAgentReq, opts ...grpc.CallOption) (*CreateAgentResp, error)
+	UpdateAgent(ctx context.Context, in *UpdateAgentReq, opts ...grpc.CallOption) (*UpdateAgentResp, error)
+	PageFindAgent(ctx context.Context, in *PageFindAgentReq, opts ...grpc.CallOption) (*PageFindAgentResp, error)
 }
 
 type customerserviceClient struct {
@@ -95,6 +101,36 @@ func (c *customerserviceClient) ChangeConversationRole(ctx context.Context, in *
 	return out, nil
 }
 
+func (c *customerserviceClient) CreateAgent(ctx context.Context, in *CreateAgentReq, opts ...grpc.CallOption) (*CreateAgentResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreateAgentResp)
+	err := c.cc.Invoke(ctx, Customerservice_CreateAgent_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *customerserviceClient) UpdateAgent(ctx context.Context, in *UpdateAgentReq, opts ...grpc.CallOption) (*UpdateAgentResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateAgentResp)
+	err := c.cc.Invoke(ctx, Customerservice_UpdateAgent_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *customerserviceClient) PageFindAgent(ctx context.Context, in *PageFindAgentReq, opts ...grpc.CallOption) (*PageFindAgentResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PageFindAgentResp)
+	err := c.cc.Invoke(ctx, Customerservice_PageFindAgent_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CustomerserviceServer is the server API for Customerservice service.
 // All implementations must embed UnimplementedCustomerserviceServer
 // for forward compatibility.
@@ -104,6 +140,9 @@ type CustomerserviceServer interface {
 	UpdateSendMsgTime(context.Context, *UpdateSendMsgTimeReq) (*UpdateSendMsgTimeResp, error)
 	UpdateConversationClosed(context.Context, *UpdateConversationClosedReq) (*UpdateConversationClosedResp, error)
 	ChangeConversationRole(context.Context, *ChangeConversationRoleReq) (*ChangeConversationRoleResp, error)
+	CreateAgent(context.Context, *CreateAgentReq) (*CreateAgentResp, error)
+	UpdateAgent(context.Context, *UpdateAgentReq) (*UpdateAgentResp, error)
+	PageFindAgent(context.Context, *PageFindAgentReq) (*PageFindAgentResp, error)
 	mustEmbedUnimplementedCustomerserviceServer()
 }
 
@@ -128,6 +167,15 @@ func (UnimplementedCustomerserviceServer) UpdateConversationClosed(context.Conte
 }
 func (UnimplementedCustomerserviceServer) ChangeConversationRole(context.Context, *ChangeConversationRoleReq) (*ChangeConversationRoleResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ChangeConversationRole not implemented")
+}
+func (UnimplementedCustomerserviceServer) CreateAgent(context.Context, *CreateAgentReq) (*CreateAgentResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateAgent not implemented")
+}
+func (UnimplementedCustomerserviceServer) UpdateAgent(context.Context, *UpdateAgentReq) (*UpdateAgentResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateAgent not implemented")
+}
+func (UnimplementedCustomerserviceServer) PageFindAgent(context.Context, *PageFindAgentReq) (*PageFindAgentResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PageFindAgent not implemented")
 }
 func (UnimplementedCustomerserviceServer) mustEmbedUnimplementedCustomerserviceServer() {}
 func (UnimplementedCustomerserviceServer) testEmbeddedByValue()                         {}
@@ -240,6 +288,60 @@ func _Customerservice_ChangeConversationRole_Handler(srv interface{}, ctx contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Customerservice_CreateAgent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateAgentReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CustomerserviceServer).CreateAgent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Customerservice_CreateAgent_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CustomerserviceServer).CreateAgent(ctx, req.(*CreateAgentReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Customerservice_UpdateAgent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateAgentReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CustomerserviceServer).UpdateAgent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Customerservice_UpdateAgent_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CustomerserviceServer).UpdateAgent(ctx, req.(*UpdateAgentReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Customerservice_PageFindAgent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PageFindAgentReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CustomerserviceServer).PageFindAgent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Customerservice_PageFindAgent_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CustomerserviceServer).PageFindAgent(ctx, req.(*PageFindAgentReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Customerservice_ServiceDesc is the grpc.ServiceDesc for Customerservice service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -266,6 +368,18 @@ var Customerservice_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ChangeConversationRole",
 			Handler:    _Customerservice_ChangeConversationRole_Handler,
+		},
+		{
+			MethodName: "CreateAgent",
+			Handler:    _Customerservice_CreateAgent_Handler,
+		},
+		{
+			MethodName: "UpdateAgent",
+			Handler:    _Customerservice_UpdateAgent_Handler,
+		},
+		{
+			MethodName: "PageFindAgent",
+			Handler:    _Customerservice_PageFindAgent_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

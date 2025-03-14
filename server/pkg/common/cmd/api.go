@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net"
 	"net/http"
@@ -18,6 +19,7 @@ func APIServer(ctx context.Context, handler http.Handler) error {
 	if err != nil {
 		return err
 	}
+	ctx = value.RootCtx
 	api := getSubConfig[config.API](reflect.ValueOf(value.Config))
 	if api == nil {
 		return fmt.Errorf("config not found api info")
@@ -32,7 +34,6 @@ func APIServer(ctx context.Context, handler http.Handler) error {
 		Addr:    net.JoinHostPort(network.GetListenIP(apiConf.ListenIP), strconv.Itoa(apiPort)),
 	}
 	serveDone := make(chan struct{})
-	defer close(serveDone)
 	rpcGracefulStop := make(chan struct{})
 	go func() {
 		select {
@@ -43,6 +44,10 @@ func APIServer(ctx context.Context, handler http.Handler) error {
 		close(rpcGracefulStop)
 	}()
 	serveErr := httpServer.ListenAndServe()
+	close(serveDone)
 	<-rpcGracefulStop
+	if errors.Is(serveErr, http.ErrServerClosed) {
+		serveErr = nil
+	}
 	return serveErr
 }

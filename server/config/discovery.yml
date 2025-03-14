@@ -1,0 +1,21 @@
+enable: etcd
+etcd:
+  rootDirectory: openim
+  address: [ localhost:12379 ]
+  username: ''
+  password: ''
+
+rpcService:
+  user: user-rpc-service
+  friend: friend-rpc-service
+  msg: msg-rpc-service
+  push: push-rpc-service
+  messageGateway: messagegateway-rpc-service
+  group: group-rpc-service
+  auth: auth-rpc-service
+  conversation: conversation-rpc-service
+  third: third-rpc-service
+  encryption: encryption-rpc-service
+  extendMsg: extendmsg-rpc-service
+  meeting: meeting-rpc-service
+  signal: signal-rpc-service

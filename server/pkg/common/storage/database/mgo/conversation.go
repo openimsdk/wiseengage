@@ -27,8 +27,8 @@ func (c *Conversation) Create(ctx context.Context, conversation *model.Conversat
 	return mongoutil.InsertOne(ctx, c.coll, conversation)
 }
 
-func (c *Conversation) Take(ctx context.Context, userID string, conversationID string) (*model.Conversation, error) {
-	return mongoutil.FindOne[*model.Conversation](ctx, c.coll, bson.M{"user_id": userID, "conversation_id": conversationID})
+func (c *Conversation) Take(ctx context.Context, conversationID string) (*model.Conversation, error) {
+	return mongoutil.FindOne[*model.Conversation](ctx, c.coll, bson.M{"conversation_id": conversationID})
 }
 
 func (c *Conversation) TakeByUserID(ctx context.Context, userID string) (*model.Conversation, error) {
