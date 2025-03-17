@@ -17,6 +17,7 @@ func newGinRouter(ctx context.Context, client discovery.Conn, cfg *Config) (*gin
 		client: customerservice.NewCustomerserviceClient(customerConn),
 	}
 	r := gin.New()
-	r.Group("/callback").POST("/openim", api.OpenIMCallback) // Callback
+	r.POST("/callback/callbackAfterSendSingleMsgCommand", api.CallbackAfterSendSingleMsgCommand)
+
 	return r, nil
 }

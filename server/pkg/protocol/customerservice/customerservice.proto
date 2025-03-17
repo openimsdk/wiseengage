@@ -106,6 +106,17 @@ message PageFindAgentResp {
   repeated AgentInfo Agents = 2;
 }
 
+message callbackAfterSendSingleMsgCommandReq {
+  string conversationID = 1;
+  string userID = 2;
+  string msgID = 3;
+  int64 sendTime = 4;
+  string content = 5;
+  int32 contentType = 6;
+}
+
+message callbackAfterSendSingleMsgCommandResp {}
+
 service customerservice {
   rpc RegisterCustomer (RegisterCustomerReq) returns (RegisterCustomerResp);
 
@@ -120,4 +131,6 @@ service customerservice {
   rpc CreateAgent(CreateAgentReq) returns (CreateAgentResp);
   rpc UpdateAgent(UpdateAgentReq) returns (UpdateAgentResp);
   rpc PageFindAgent(PageFindAgentReq) returns (PageFindAgentResp);
+
+  rpc callbackAfterSendSingleMsgCommand(callbackAfterSendSingleMsgCommandReq) returns (callbackAfterSendSingleMsgCommandResp);
 }

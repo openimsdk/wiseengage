@@ -1045,6 +1045,126 @@ func (x *PageFindAgentResp) GetAgents() []*AgentInfo {
 	return nil
 }
 
+type CallbackAfterSendSingleMsgCommandReq struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	ConversationID string                 `protobuf:"bytes,1,opt,name=conversationID,proto3" json:"conversationID"`
+	UserID         string                 `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID"`
+	MsgID          string                 `protobuf:"bytes,3,opt,name=msgID,proto3" json:"msgID"`
+	SendTime       int64                  `protobuf:"varint,4,opt,name=sendTime,proto3" json:"sendTime"`
+	Content        string                 `protobuf:"bytes,5,opt,name=content,proto3" json:"content"`
+	ContentType    int32                  `protobuf:"varint,6,opt,name=contentType,proto3" json:"contentType"`
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *CallbackAfterSendSingleMsgCommandReq) Reset() {
+	*x = CallbackAfterSendSingleMsgCommandReq{}
+	mi := &file_customerservice_customerservice_proto_msgTypes[18]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CallbackAfterSendSingleMsgCommandReq) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CallbackAfterSendSingleMsgCommandReq) ProtoMessage() {}
+
+func (x *CallbackAfterSendSingleMsgCommandReq) ProtoReflect() protoreflect.Message {
+	mi := &file_customerservice_customerservice_proto_msgTypes[18]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CallbackAfterSendSingleMsgCommandReq.ProtoReflect.Descriptor instead.
+func (*CallbackAfterSendSingleMsgCommandReq) Descriptor() ([]byte, []int) {
+	return file_customerservice_customerservice_proto_rawDescGZIP(), []int{18}
+}
+
+func (x *CallbackAfterSendSingleMsgCommandReq) GetConversationID() string {
+	if x != nil {
+		return x.ConversationID
+	}
+	return ""
+}
+
+func (x *CallbackAfterSendSingleMsgCommandReq) GetUserID() string {
+	if x != nil {
+		return x.UserID
+	}
+	return ""
+}
+
+func (x *CallbackAfterSendSingleMsgCommandReq) GetMsgID() string {
+	if x != nil {
+		return x.MsgID
+	}
+	return ""
+}
+
+func (x *CallbackAfterSendSingleMsgCommandReq) GetSendTime() int64 {
+	if x != nil {
+		return x.SendTime
+	}
+	return 0
+}
+
+func (x *CallbackAfterSendSingleMsgCommandReq) GetContent() string {
+	if x != nil {
+		return x.Content
+	}
+	return ""
+}
+
+func (x *CallbackAfterSendSingleMsgCommandReq) GetContentType() int32 {
+	if x != nil {
+		return x.ContentType
+	}
+	return 0
+}
+
+type CallbackAfterSendSingleMsgCommandResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CallbackAfterSendSingleMsgCommandResp) Reset() {
+	*x = CallbackAfterSendSingleMsgCommandResp{}
+	mi := &file_customerservice_customerservice_proto_msgTypes[19]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CallbackAfterSendSingleMsgCommandResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CallbackAfterSendSingleMsgCommandResp) ProtoMessage() {}
+
+func (x *CallbackAfterSendSingleMsgCommandResp) ProtoReflect() protoreflect.Message {
+	mi := &file_customerservice_customerservice_proto_msgTypes[19]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CallbackAfterSendSingleMsgCommandResp.ProtoReflect.Descriptor instead.
+func (*CallbackAfterSendSingleMsgCommandResp) Descriptor() ([]byte, []int) {
+	return file_customerservice_customerservice_proto_rawDescGZIP(), []int{19}
+}
+
 var File_customerservice_customerservice_proto protoreflect.FileDescriptor
 
 var file_customerservice_customerservice_proto_rawDesc = []byte{
@@ -1190,7 +1310,23 @@ var file_customerservice_customerservice_proto_rawDesc = []byte{
 	0x6f, 0x70, 0x65, 0x6e, 0x69, 0x6d, 0x2e, 0x77, 0x69, 0x73, 0x65, 0x65, 0x6e, 0x67, 0x61, 0x67,
 	0x65, 0x2e, 0x63, 0x75, 0x73, 0x74, 0x6f, 0x6d, 0x65, 0x72, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63,
 	0x65, 0x2e, 0x41, 0x67, 0x65, 0x6e, 0x74, 0x49, 0x6e, 0x66, 0x6f, 0x52, 0x06, 0x41, 0x67, 0x65,
-	0x6e, 0x74, 0x73, 0x32, 0xc7, 0x08, 0x0a, 0x0f, 0x63, 0x75, 0x73, 0x74, 0x6f, 0x6d, 0x65, 0x72,
+	0x6e, 0x74, 0x73, 0x22, 0xd4, 0x01, 0x0a, 0x24, 0x63, 0x61, 0x6c, 0x6c, 0x62, 0x61, 0x63, 0x6b,
+	0x41, 0x66, 0x74, 0x65, 0x72, 0x53, 0x65, 0x6e, 0x64, 0x53, 0x69, 0x6e, 0x67, 0x6c, 0x65, 0x4d,
+	0x73, 0x67, 0x43, 0x6f, 0x6d, 0x6d, 0x61, 0x6e, 0x64, 0x52, 0x65, 0x71, 0x12, 0x26, 0x0a, 0x0e,
+	0x63, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x73, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x49, 0x44, 0x18, 0x01,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x0e, 0x63, 0x6f, 0x6e, 0x76, 0x65, 0x72, 0x73, 0x61, 0x74, 0x69,
+	0x6f, 0x6e, 0x49, 0x44, 0x12, 0x16, 0x0a, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x44, 0x18, 0x02,
+	0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x44, 0x12, 0x14, 0x0a, 0x05,
+	0x6d, 0x73, 0x67, 0x49, 0x44, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x6d, 0x73, 0x67,
+	0x49, 0x44, 0x12, 0x1a, 0x0a, 0x08, 0x73, 0x65, 0x6e, 0x64, 0x54, 0x69, 0x6d, 0x65, 0x18, 0x04,
+	0x20, 0x01, 0x28, 0x03, 0x52, 0x08, 0x73, 0x65, 0x6e, 0x64, 0x54, 0x69, 0x6d, 0x65, 0x12, 0x18,
+	0x0a, 0x07, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x6e, 0x74, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52,
+	0x07, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x6e, 0x74, 0x12, 0x20, 0x0a, 0x0b, 0x63, 0x6f, 0x6e, 0x74,
+	0x65, 0x6e, 0x74, 0x54, 0x79, 0x70, 0x65, 0x18, 0x06, 0x20, 0x01, 0x28, 0x05, 0x52, 0x0b, 0x63,
+	0x6f, 0x6e, 0x74, 0x65, 0x6e, 0x74, 0x54, 0x79, 0x70, 0x65, 0x22, 0x27, 0x0a, 0x25, 0x63, 0x61,
+	0x6c, 0x6c, 0x62, 0x61, 0x63, 0x6b, 0x41, 0x66, 0x74, 0x65, 0x72, 0x53, 0x65, 0x6e, 0x64, 0x53,
+	0x69, 0x6e, 0x67, 0x6c, 0x65, 0x4d, 0x73, 0x67, 0x43, 0x6f, 0x6d, 0x6d, 0x61, 0x6e, 0x64, 0x52,
+	0x65, 0x73, 0x70, 0x32, 0x80, 0x0a, 0x0a, 0x0f, 0x63, 0x75, 0x73, 0x74, 0x6f, 0x6d, 0x65, 0x72,
 	0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x83, 0x01, 0x0a, 0x10, 0x52, 0x65, 0x67, 0x69,
 	0x73, 0x74, 0x65, 0x72, 0x43, 0x75, 0x73, 0x74, 0x6f, 0x6d, 0x65, 0x72, 0x12, 0x36, 0x2e, 0x6f,
 	0x70, 0x65, 0x6e, 0x69, 0x6d, 0x2e, 0x77, 0x69, 0x73, 0x65, 0x65, 0x6e, 0x67, 0x61, 0x67, 0x65,
@@ -1258,12 +1394,24 @@ var file_customerservice_customerservice_proto_rawDesc = []byte{
 	0x67, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x71, 0x1a, 0x34, 0x2e, 0x6f, 0x70, 0x65, 0x6e, 0x69, 0x6d,
 	0x2e, 0x77, 0x69, 0x73, 0x65, 0x65, 0x6e, 0x67, 0x61, 0x67, 0x65, 0x2e, 0x63, 0x75, 0x73, 0x74,
 	0x6f, 0x6d, 0x65, 0x72, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x50, 0x61, 0x67, 0x65,
-	0x46, 0x69, 0x6e, 0x64, 0x41, 0x67, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70, 0x42, 0x41, 0x5a,
-	0x3f, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x6f, 0x70, 0x65, 0x6e,
-	0x69, 0x6d, 0x73, 0x64, 0x6b, 0x2f, 0x77, 0x69, 0x73, 0x65, 0x65, 0x6e, 0x67, 0x61, 0x67, 0x65,
-	0x2f, 0x76, 0x31, 0x2f, 0x70, 0x6b, 0x67, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x63, 0x6f, 0x6c,
-	0x2f, 0x63, 0x75, 0x73, 0x74, 0x6f, 0x6d, 0x65, 0x72, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65,
-	0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x46, 0x69, 0x6e, 0x64, 0x41, 0x67, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70, 0x12, 0xb6, 0x01,
+	0x0a, 0x21, 0x63, 0x61, 0x6c, 0x6c, 0x62, 0x61, 0x63, 0x6b, 0x41, 0x66, 0x74, 0x65, 0x72, 0x53,
+	0x65, 0x6e, 0x64, 0x53, 0x69, 0x6e, 0x67, 0x6c, 0x65, 0x4d, 0x73, 0x67, 0x43, 0x6f, 0x6d, 0x6d,
+	0x61, 0x6e, 0x64, 0x12, 0x47, 0x2e, 0x6f, 0x70, 0x65, 0x6e, 0x69, 0x6d, 0x2e, 0x77, 0x69, 0x73,
+	0x65, 0x65, 0x6e, 0x67, 0x61, 0x67, 0x65, 0x2e, 0x63, 0x75, 0x73, 0x74, 0x6f, 0x6d, 0x65, 0x72,
+	0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x2e, 0x63, 0x61, 0x6c, 0x6c, 0x62, 0x61, 0x63, 0x6b,
+	0x41, 0x66, 0x74, 0x65, 0x72, 0x53, 0x65, 0x6e, 0x64, 0x53, 0x69, 0x6e, 0x67, 0x6c, 0x65, 0x4d,
+	0x73, 0x67, 0x43, 0x6f, 0x6d, 0x6d, 0x61, 0x6e, 0x64, 0x52, 0x65, 0x71, 0x1a, 0x48, 0x2e, 0x6f,
+	0x70, 0x65, 0x6e, 0x69, 0x6d, 0x2e, 0x77, 0x69, 0x73, 0x65, 0x65, 0x6e, 0x67, 0x61, 0x67, 0x65,
+	0x2e, 0x63, 0x75, 0x73, 0x74, 0x6f, 0x6d, 0x65, 0x72, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65,
+	0x2e, 0x63, 0x61, 0x6c, 0x6c, 0x62, 0x61, 0x63, 0x6b, 0x41, 0x66, 0x74, 0x65, 0x72, 0x53, 0x65,
+	0x6e, 0x64, 0x53, 0x69, 0x6e, 0x67, 0x6c, 0x65, 0x4d, 0x73, 0x67, 0x43, 0x6f, 0x6d, 0x6d, 0x61,
+	0x6e, 0x64, 0x52, 0x65, 0x73, 0x70, 0x42, 0x41, 0x5a, 0x3f, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62,
+	0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x6f, 0x70, 0x65, 0x6e, 0x69, 0x6d, 0x73, 0x64, 0x6b, 0x2f, 0x77,
+	0x69, 0x73, 0x65, 0x65, 0x6e, 0x67, 0x61, 0x67, 0x65, 0x2f, 0x76, 0x31, 0x2f, 0x70, 0x6b, 0x67,
+	0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x63, 0x6f, 0x6c, 0x2f, 0x63, 0x75, 0x73, 0x74, 0x6f, 0x6d,
+	0x65, 0x72, 0x73, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f,
+	0x33,
 }
 
 var (
@@ -1278,27 +1426,29 @@ func file_customerservice_customerservice_proto_rawDescGZIP() []byte {
 	return file_customerservice_customerservice_proto_rawDescData
 }
 
-var file_customerservice_customerservice_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
+var file_customerservice_customerservice_proto_msgTypes = make([]protoimpl.MessageInfo, 20)
 var file_customerservice_customerservice_proto_goTypes = []any{
-	(*RegisterCustomerReq)(nil),          // 0: openim.wiseengage.customerservice.RegisterCustomerReq
-	(*RegisterCustomerResp)(nil),         // 1: openim.wiseengage.customerservice.RegisterCustomerResp
-	(*StartConsultationReq)(nil),         // 2: openim.wiseengage.customerservice.StartConsultationReq
-	(*StartConsultationResp)(nil),        // 3: openim.wiseengage.customerservice.StartConsultationResp
-	(*UpdateSendMsgTimeReq)(nil),         // 4: openim.wiseengage.customerservice.UpdateSendMsgTimeReq
-	(*UpdateSendMsgTimeResp)(nil),        // 5: openim.wiseengage.customerservice.UpdateSendMsgTimeResp
-	(*UpdateConversationClosedReq)(nil),  // 6: openim.wiseengage.customerservice.UpdateConversationClosedReq
-	(*UpdateConversationClosedResp)(nil), // 7: openim.wiseengage.customerservice.UpdateConversationClosedResp
-	(*ChangeConversationRoleReq)(nil),    // 8: openim.wiseengage.customerservice.ChangeConversationRoleReq
-	(*ChangeConversationRoleResp)(nil),   // 9: openim.wiseengage.customerservice.ChangeConversationRoleResp
-	(*AgentMessage)(nil),                 // 10: openim.wiseengage.customerservice.AgentMessage
-	(*AgentInfo)(nil),                    // 11: openim.wiseengage.customerservice.AgentInfo
-	(*CreateAgentReq)(nil),               // 12: openim.wiseengage.customerservice.CreateAgentReq
-	(*CreateAgentResp)(nil),              // 13: openim.wiseengage.customerservice.CreateAgentResp
-	(*UpdateAgentReq)(nil),               // 14: openim.wiseengage.customerservice.UpdateAgentReq
-	(*UpdateAgentResp)(nil),              // 15: openim.wiseengage.customerservice.UpdateAgentResp
-	(*PageFindAgentReq)(nil),             // 16: openim.wiseengage.customerservice.PageFindAgentReq
-	(*PageFindAgentResp)(nil),            // 17: openim.wiseengage.customerservice.PageFindAgentResp
-	(*common.RequestPagination)(nil),     // 18: openim.wiseengage.common.RequestPagination
+	(*RegisterCustomerReq)(nil),                   // 0: openim.wiseengage.customerservice.RegisterCustomerReq
+	(*RegisterCustomerResp)(nil),                  // 1: openim.wiseengage.customerservice.RegisterCustomerResp
+	(*StartConsultationReq)(nil),                  // 2: openim.wiseengage.customerservice.StartConsultationReq
+	(*StartConsultationResp)(nil),                 // 3: openim.wiseengage.customerservice.StartConsultationResp
+	(*UpdateSendMsgTimeReq)(nil),                  // 4: openim.wiseengage.customerservice.UpdateSendMsgTimeReq
+	(*UpdateSendMsgTimeResp)(nil),                 // 5: openim.wiseengage.customerservice.UpdateSendMsgTimeResp
+	(*UpdateConversationClosedReq)(nil),           // 6: openim.wiseengage.customerservice.UpdateConversationClosedReq
+	(*UpdateConversationClosedResp)(nil),          // 7: openim.wiseengage.customerservice.UpdateConversationClosedResp
+	(*ChangeConversationRoleReq)(nil),             // 8: openim.wiseengage.customerservice.ChangeConversationRoleReq
+	(*ChangeConversationRoleResp)(nil),            // 9: openim.wiseengage.customerservice.ChangeConversationRoleResp
+	(*AgentMessage)(nil),                          // 10: openim.wiseengage.customerservice.AgentMessage
+	(*AgentInfo)(nil),                             // 11: openim.wiseengage.customerservice.AgentInfo
+	(*CreateAgentReq)(nil),                        // 12: openim.wiseengage.customerservice.CreateAgentReq
+	(*CreateAgentResp)(nil),                       // 13: openim.wiseengage.customerservice.CreateAgentResp
+	(*UpdateAgentReq)(nil),                        // 14: openim.wiseengage.customerservice.UpdateAgentReq
+	(*UpdateAgentResp)(nil),                       // 15: openim.wiseengage.customerservice.UpdateAgentResp
+	(*PageFindAgentReq)(nil),                      // 16: openim.wiseengage.customerservice.PageFindAgentReq
+	(*PageFindAgentResp)(nil),                     // 17: openim.wiseengage.customerservice.PageFindAgentResp
+	(*CallbackAfterSendSingleMsgCommandReq)(nil),  // 18: openim.wiseengage.customerservice.callbackAfterSendSingleMsgCommandReq
+	(*CallbackAfterSendSingleMsgCommandResp)(nil), // 19: openim.wiseengage.customerservice.callbackAfterSendSingleMsgCommandResp
+	(*common.RequestPagination)(nil),              // 20: openim.wiseengage.common.RequestPagination
 }
 var file_customerservice_customerservice_proto_depIdxs = []int32{
 	10, // 0: openim.wiseengage.customerservice.AgentInfo.startMsg:type_name -> openim.wiseengage.customerservice.AgentMessage
@@ -1308,7 +1458,7 @@ var file_customerservice_customerservice_proto_depIdxs = []int32{
 	10, // 4: openim.wiseengage.customerservice.UpdateAgentReq.startMsg:type_name -> openim.wiseengage.customerservice.AgentMessage
 	10, // 5: openim.wiseengage.customerservice.UpdateAgentReq.endMsg:type_name -> openim.wiseengage.customerservice.AgentMessage
 	10, // 6: openim.wiseengage.customerservice.UpdateAgentReq.timeoutMsg:type_name -> openim.wiseengage.customerservice.AgentMessage
-	18, // 7: openim.wiseengage.customerservice.PageFindAgentReq.pagination:type_name -> openim.wiseengage.common.RequestPagination
+	20, // 7: openim.wiseengage.customerservice.PageFindAgentReq.pagination:type_name -> openim.wiseengage.common.RequestPagination
 	11, // 8: openim.wiseengage.customerservice.PageFindAgentResp.Agents:type_name -> openim.wiseengage.customerservice.AgentInfo
 	0,  // 9: openim.wiseengage.customerservice.customerservice.RegisterCustomer:input_type -> openim.wiseengage.customerservice.RegisterCustomerReq
 	2,  // 10: openim.wiseengage.customerservice.customerservice.StartConsultation:input_type -> openim.wiseengage.customerservice.StartConsultationReq
@@ -1318,16 +1468,18 @@ var file_customerservice_customerservice_proto_depIdxs = []int32{
 	12, // 14: openim.wiseengage.customerservice.customerservice.CreateAgent:input_type -> openim.wiseengage.customerservice.CreateAgentReq
 	14, // 15: openim.wiseengage.customerservice.customerservice.UpdateAgent:input_type -> openim.wiseengage.customerservice.UpdateAgentReq
 	16, // 16: openim.wiseengage.customerservice.customerservice.PageFindAgent:input_type -> openim.wiseengage.customerservice.PageFindAgentReq
-	1,  // 17: openim.wiseengage.customerservice.customerservice.RegisterCustomer:output_type -> openim.wiseengage.customerservice.RegisterCustomerResp
-	3,  // 18: openim.wiseengage.customerservice.customerservice.StartConsultation:output_type -> openim.wiseengage.customerservice.StartConsultationResp
-	5,  // 19: openim.wiseengage.customerservice.customerservice.UpdateSendMsgTime:output_type -> openim.wiseengage.customerservice.UpdateSendMsgTimeResp
-	7,  // 20: openim.wiseengage.customerservice.customerservice.UpdateConversationClosed:output_type -> openim.wiseengage.customerservice.UpdateConversationClosedResp
-	9,  // 21: openim.wiseengage.customerservice.customerservice.ChangeConversationRole:output_type -> openim.wiseengage.customerservice.ChangeConversationRoleResp
-	13, // 22: openim.wiseengage.customerservice.customerservice.CreateAgent:output_type -> openim.wiseengage.customerservice.CreateAgentResp
-	15, // 23: openim.wiseengage.customerservice.customerservice.UpdateAgent:output_type -> openim.wiseengage.customerservice.UpdateAgentResp
-	17, // 24: openim.wiseengage.customerservice.customerservice.PageFindAgent:output_type -> openim.wiseengage.customerservice.PageFindAgentResp
-	17, // [17:25] is the sub-list for method output_type
-	9,  // [9:17] is the sub-list for method input_type
+	18, // 17: openim.wiseengage.customerservice.customerservice.callbackAfterSendSingleMsgCommand:input_type -> openim.wiseengage.customerservice.callbackAfterSendSingleMsgCommandReq
+	1,  // 18: openim.wiseengage.customerservice.customerservice.RegisterCustomer:output_type -> openim.wiseengage.customerservice.RegisterCustomerResp
+	3,  // 19: openim.wiseengage.customerservice.customerservice.StartConsultation:output_type -> openim.wiseengage.customerservice.StartConsultationResp
+	5,  // 20: openim.wiseengage.customerservice.customerservice.UpdateSendMsgTime:output_type -> openim.wiseengage.customerservice.UpdateSendMsgTimeResp
+	7,  // 21: openim.wiseengage.customerservice.customerservice.UpdateConversationClosed:output_type -> openim.wiseengage.customerservice.UpdateConversationClosedResp
+	9,  // 22: openim.wiseengage.customerservice.customerservice.ChangeConversationRole:output_type -> openim.wiseengage.customerservice.ChangeConversationRoleResp
+	13, // 23: openim.wiseengage.customerservice.customerservice.CreateAgent:output_type -> openim.wiseengage.customerservice.CreateAgentResp
+	15, // 24: openim.wiseengage.customerservice.customerservice.UpdateAgent:output_type -> openim.wiseengage.customerservice.UpdateAgentResp
+	17, // 25: openim.wiseengage.customerservice.customerservice.PageFindAgent:output_type -> openim.wiseengage.customerservice.PageFindAgentResp
+	19, // 26: openim.wiseengage.customerservice.customerservice.callbackAfterSendSingleMsgCommand:output_type -> openim.wiseengage.customerservice.callbackAfterSendSingleMsgCommandResp
+	18, // [18:27] is the sub-list for method output_type
+	9,  // [9:18] is the sub-list for method input_type
 	9,  // [9:9] is the sub-list for extension type_name
 	9,  // [9:9] is the sub-list for extension extendee
 	0,  // [0:9] is the sub-list for field type_name
@@ -1345,7 +1497,7 @@ func file_customerservice_customerservice_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_customerservice_customerservice_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   18,
+			NumMessages:   20,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -19,14 +19,15 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Customerservice_RegisterCustomer_FullMethodName         = "/openim.wiseengage.customerservice.customerservice/RegisterCustomer"
-	Customerservice_StartConsultation_FullMethodName        = "/openim.wiseengage.customerservice.customerservice/StartConsultation"
-	Customerservice_UpdateSendMsgTime_FullMethodName        = "/openim.wiseengage.customerservice.customerservice/UpdateSendMsgTime"
-	Customerservice_UpdateConversationClosed_FullMethodName = "/openim.wiseengage.customerservice.customerservice/UpdateConversationClosed"
-	Customerservice_ChangeConversationRole_FullMethodName   = "/openim.wiseengage.customerservice.customerservice/ChangeConversationRole"
-	Customerservice_CreateAgent_FullMethodName              = "/openim.wiseengage.customerservice.customerservice/CreateAgent"
-	Customerservice_UpdateAgent_FullMethodName              = "/openim.wiseengage.customerservice.customerservice/UpdateAgent"
-	Customerservice_PageFindAgent_FullMethodName            = "/openim.wiseengage.customerservice.customerservice/PageFindAgent"
+	Customerservice_RegisterCustomer_FullMethodName                  = "/openim.wiseengage.customerservice.customerservice/RegisterCustomer"
+	Customerservice_StartConsultation_FullMethodName                 = "/openim.wiseengage.customerservice.customerservice/StartConsultation"
+	Customerservice_UpdateSendMsgTime_FullMethodName                 = "/openim.wiseengage.customerservice.customerservice/UpdateSendMsgTime"
+	Customerservice_UpdateConversationClosed_FullMethodName          = "/openim.wiseengage.customerservice.customerservice/UpdateConversationClosed"
+	Customerservice_ChangeConversationRole_FullMethodName            = "/openim.wiseengage.customerservice.customerservice/ChangeConversationRole"
+	Customerservice_CreateAgent_FullMethodName                       = "/openim.wiseengage.customerservice.customerservice/CreateAgent"
+	Customerservice_UpdateAgent_FullMethodName                       = "/openim.wiseengage.customerservice.customerservice/UpdateAgent"
+	Customerservice_PageFindAgent_FullMethodName                     = "/openim.wiseengage.customerservice.customerservice/PageFindAgent"
+	Customerservice_CallbackAfterSendSingleMsgCommand_FullMethodName = "/openim.wiseengage.customerservice.customerservice/callbackAfterSendSingleMsgCommand"
 )
 
 // CustomerserviceClient is the client API for Customerservice service.
@@ -41,6 +42,7 @@ type CustomerserviceClient interface {
 	CreateAgent(ctx context.Context, in *CreateAgentReq, opts ...grpc.CallOption) (*CreateAgentResp, error)
 	UpdateAgent(ctx context.Context, in *UpdateAgentReq, opts ...grpc.CallOption) (*UpdateAgentResp, error)
 	PageFindAgent(ctx context.Context, in *PageFindAgentReq, opts ...grpc.CallOption) (*PageFindAgentResp, error)
+	CallbackAfterSendSingleMsgCommand(ctx context.Context, in *CallbackAfterSendSingleMsgCommandReq, opts ...grpc.CallOption) (*CallbackAfterSendSingleMsgCommandResp, error)
 }
 
 type customerserviceClient struct {
@@ -131,6 +133,16 @@ func (c *customerserviceClient) PageFindAgent(ctx context.Context, in *PageFindA
 	return out, nil
 }
 
+func (c *customerserviceClient) CallbackAfterSendSingleMsgCommand(ctx context.Context, in *CallbackAfterSendSingleMsgCommandReq, opts ...grpc.CallOption) (*CallbackAfterSendSingleMsgCommandResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CallbackAfterSendSingleMsgCommandResp)
+	err := c.cc.Invoke(ctx, Customerservice_CallbackAfterSendSingleMsgCommand_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CustomerserviceServer is the server API for Customerservice service.
 // All implementations must embed UnimplementedCustomerserviceServer
 // for forward compatibility.
@@ -143,6 +155,7 @@ type CustomerserviceServer interface {
 	CreateAgent(context.Context, *CreateAgentReq) (*CreateAgentResp, error)
 	UpdateAgent(context.Context, *UpdateAgentReq) (*UpdateAgentResp, error)
 	PageFindAgent(context.Context, *PageFindAgentReq) (*PageFindAgentResp, error)
+	CallbackAfterSendSingleMsgCommand(context.Context, *CallbackAfterSendSingleMsgCommandReq) (*CallbackAfterSendSingleMsgCommandResp, error)
 	mustEmbedUnimplementedCustomerserviceServer()
 }
 
@@ -176,6 +189,9 @@ func (UnimplementedCustomerserviceServer) UpdateAgent(context.Context, *UpdateAg
 }
 func (UnimplementedCustomerserviceServer) PageFindAgent(context.Context, *PageFindAgentReq) (*PageFindAgentResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method PageFindAgent not implemented")
+}
+func (UnimplementedCustomerserviceServer) CallbackAfterSendSingleMsgCommand(context.Context, *CallbackAfterSendSingleMsgCommandReq) (*CallbackAfterSendSingleMsgCommandResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CallbackAfterSendSingleMsgCommand not implemented")
 }
 func (UnimplementedCustomerserviceServer) mustEmbedUnimplementedCustomerserviceServer() {}
 func (UnimplementedCustomerserviceServer) testEmbeddedByValue()                         {}
@@ -342,6 +358,24 @@ func _Customerservice_PageFindAgent_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Customerservice_CallbackAfterSendSingleMsgCommand_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CallbackAfterSendSingleMsgCommandReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CustomerserviceServer).CallbackAfterSendSingleMsgCommand(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Customerservice_CallbackAfterSendSingleMsgCommand_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CustomerserviceServer).CallbackAfterSendSingleMsgCommand(ctx, req.(*CallbackAfterSendSingleMsgCommandReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Customerservice_ServiceDesc is the grpc.ServiceDesc for Customerservice service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -380,6 +414,10 @@ var Customerservice_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "PageFindAgent",
 			Handler:    _Customerservice_PageFindAgent_Handler,
+		},
+		{
+			MethodName: "callbackAfterSendSingleMsgCommand",
+			Handler:    _Customerservice_CallbackAfterSendSingleMsgCommand_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

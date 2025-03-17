@@ -46,8 +46,10 @@ func (c *Conversation) getFilter(userID string, conversationID string, version i
 	return filter
 }
 
-func (c *Conversation) UpdateLastMsg(ctx context.Context, userID string, conversationID string, lastMsg *model.LastMessage) error {
-	filter := c.getFilter(userID, conversationID, -1)
+func (c *Conversation) UpdateLastMsg(ctx context.Context, conversationID string, lastMsg *model.LastMessage) error {
+	filter := bson.M{
+		"conversation_id": conversationID,
+	}
 	filter["$or"] = []bson.M{
 		{"last_msg": nil},
 		{"last_msg.send_time": bson.M{"$lt": lastMsg.SendTime}},

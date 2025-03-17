@@ -23,7 +23,7 @@ func IsDuplicateKeyError(err error) bool {
 type CustomerDatabase interface {
 	TakeConversationByUserID(ctx context.Context, userID string) (*model.Conversation, error)
 	CreateConversation(ctx context.Context, conversation *model.Conversation) error
-	UpdateConversationLastMsg(ctx context.Context, userID string, conversationID string, lastMsg *model.LastMessage) error
+	UpdateConversationLastMsg(ctx context.Context, conversationID string, lastMsg *model.LastMessage) error
 	UpdateConversationStatusOpen(ctx context.Context, userID string, conversationID string, version int, role string) (bool, error)
 	UpdateConversationStatusClosed(ctx context.Context, userID string, conversationID string, version int, cause string) (bool, error)
 	SetStatusTimeoutClosed(ctx context.Context, userID string, conversationID string, lastMsg *model.LastMessage, cause string) (bool, error)
@@ -68,8 +68,8 @@ func (c *customerDatabase) CreateConversation(ctx context.Context, conversation 
 	return c.conversationDB.Create(ctx, conversation)
 }
 
-func (c *customerDatabase) UpdateConversationLastMsg(ctx context.Context, userID string, conversationID string, lastMsg *model.LastMessage) error {
-	return c.conversationDB.UpdateLastMsg(ctx, userID, conversationID, lastMsg)
+func (c *customerDatabase) UpdateConversationLastMsg(ctx context.Context, conversationID string, lastMsg *model.LastMessage) error {
+	return c.conversationDB.UpdateLastMsg(ctx, conversationID, lastMsg)
 }
 func (c *customerDatabase) UpdateConversationStatusOpen(ctx context.Context, userID string, conversationID string, version int, role string) (bool, error) {
 	return c.conversationDB.SetStatusOpen(ctx, userID, conversationID, version, role)
