@@ -1,46 +1,45 @@
 package customerservice
 
 import (
+	"bytes"
 	"context"
-	"math/rand"
-	"strconv"
+	"encoding/json"
+	"math/rand/v2"
 	"strings"
 	"time"
 
 	constant2 "github.com/openimsdk/protocol/constant"
 	"github.com/openimsdk/protocol/group"
-	"github.com/openimsdk/protocol/msg"
 	"github.com/openimsdk/protocol/sdkws"
+	"github.com/openimsdk/tools/errs"
 	"github.com/openimsdk/tools/log"
-	"github.com/openimsdk/tools/utils/idutil"
-	"github.com/openimsdk/tools/utils/timeutil"
-	"github.com/openimsdk/wiseengage/v1/pkg/common/config"
 	"github.com/openimsdk/wiseengage/v1/pkg/common/constant"
 	"github.com/openimsdk/wiseengage/v1/pkg/common/storage/controller"
 	"github.com/openimsdk/wiseengage/v1/pkg/common/storage/model"
+	"github.com/openimsdk/wiseengage/v1/pkg/imapi"
 	pb "github.com/openimsdk/wiseengage/v1/pkg/protocol/customerservice"
 )
 
-func (o *customerService) initConversation(ctx context.Context, userID string) (*model.Conversation, error) {
+func (o *customerService) initConversation(ctx context.Context, userID string, agentUserID string) (*model.Conversation, error) {
 	if conversation, err := o.db.TakeConversationByUserID(ctx, userID); err == nil {
 		return conversation, nil
 	} else if !controller.IsNotFound(err) {
 		return nil, err
 	}
-	joinGroupResp, err := o.groupCli.GetFullJoinGroupIDs(ctx, &group.GetFullJoinGroupIDsReq{UserID: userID})
+	joinGroupIDs, err := o.imApi.GetFullJoinGroupIDs(ctx, userID)
 	if err != nil {
 		return nil, err
 	}
 	var groupID string
-	if len(joinGroupResp.GroupIDs) > 0 {
-		groupID = joinGroupResp.GroupIDs[0]
+	if len(joinGroupIDs) > 0 {
+		groupID = joinGroupIDs[0]
 	} else {
-		req := &group.CreateGroupReq{OwnerUserID: o.robotUserID, MemberUserIDs: []string{userID}, GroupInfo: &sdkws.GroupInfo{GroupID: "wiseengage"}}
-		createGroupResp, err := o.groupCli.CreateGroup(ctx, req)
+		req := &group.CreateGroupReq{OwnerUserID: agentUserID, MemberUserIDs: []string{userID}, GroupInfo: &sdkws.GroupInfo{GroupID: "wiseengage"}}
+		groupInfo, err := o.imApi.CreateGroup(ctx, req)
 		if err != nil {
 			return nil, err
 		}
-		groupID = createGroupResp.GroupInfo.GroupID
+		groupID = groupInfo.GroupID
 	}
 	now := time.Now()
 	conversation := &model.Conversation{
@@ -60,7 +59,14 @@ func (o *customerService) initConversation(ctx context.Context, userID string) (
 
 func (o *customerService) StartConsultation(ctx context.Context, req *pb.StartConsultationReq) (*pb.StartConsultationResp, error) {
 	// TODO: check user
-	conversation, err := o.initConversation(ctx, req.UserID)
+	agents, err := o.db.FindAgentType(ctx, req.AgentType, []string{constant.AgentStatusEnable})
+	if err != nil {
+		return nil, err
+	}
+	if len(agents) == 0 {
+		return nil, errs.ErrRecordNotFound.WrapMsg("no available agent")
+	}
+	conversation, err := o.initConversation(ctx, req.UserID, agents[rand.Uint32()%uint32(len(agents))].UserID)
 	if err != nil {
 		return nil, err
 	}
@@ -71,52 +77,57 @@ func (o *customerService) StartConsultation(ctx context.Context, req *pb.StartCo
 			return nil, err
 		}
 		if updated {
-			if err := o.sendMsg(ctx, conversation.ConversationID, o.config.Msg.Start); err != nil {
-				return nil, err
-			}
+			o.agentSendConfigMessage(ctx, conversation.ConversationID, conversation.AgentUserID, func(agent *model.Agent) *model.AgentMessage {
+				return agent.StartMsg
+			})
 		}
 	}
 	return &pb.StartConsultationResp{ConversationID: conversation.ConversationID}, nil
 }
 
-func (o *customerService) sendMsg(ctx context.Context, conversationID string, msgs []config.Message) error {
-	if len(msgs) == 0 {
-		return nil
-	}
-	groupID := strings.TrimPrefix(conversationID, "sg_")
-	now := timeutil.GetCurrentTimestampByMill()
-	req := msg.SendMsgReq{
-		MsgData: &sdkws.MsgData{
-			SendID:           o.robotUserID,
-			GroupID:          groupID,
-			ClientMsgID:      idutil.GetMsgIDByMD5(strconv.Itoa(int(rand.Uint32()))),
-			SenderPlatformID: constant2.AdminPlatformID,
-			SenderNickname:   "robot",
-			SenderFaceURL:    "",
-			SessionType:      constant2.ReadGroupChatType,
-			MsgFrom:          constant2.SysMsgType,
-			ContentType:      0,
-			Content:          nil,
-			CreateTime:       now,
-			SendTime:         now,
-			Options: map[string]bool{
-				constant2.IsHistory:            false,
-				constant2.IsPersistent:         false,
-				constant2.IsSenderSync:         false,
-				constant2.IsConversationUpdate: false,
-			},
-			OfflinePushInfo: nil,
-			Ex:              "",
-		},
-	}
-	for _, m := range msgs {
-		req.MsgData.ContentType = m.ContentType
-		req.MsgData.Content = []byte(m.Content)
-		if _, err := o.msgCli.SendMsg(ctx, &req); err != nil {
-			return err
+func (o *customerService) agentSendConfigMessage(ctx context.Context, conversationID string, agentUserID string, msgFn func(agent *model.Agent) *model.AgentMessage) {
+	if agentUserID == "" {
+		conversation, err := o.db.TakeConversationByUserID(ctx, conversationID)
+		if err != nil {
+			log.ZWarn(ctx, "send msg take conversation", err, "conversationID", conversationID)
+			return
 		}
+		agentUserID = conversation.AgentUserID
 	}
-	return nil
+	agent, err := o.db.TakeAgent(ctx, agentUserID)
+	if err != nil {
+		log.ZWarn(ctx, "sendMsg take agent", err, "agentUserID", agentUserID)
+		return
+	}
+	val := msgFn(agent)
+	if val == nil {
+		return
+	}
+	decoder := json.NewDecoder(bytes.NewReader([]byte(val.Content)))
+	decoder.UseNumber()
+	var message map[string]any
+	if err := decoder.Decode(&message); err != nil {
+		log.ZError(ctx, "agentSendConfigMessage decode", err, "conversationID", conversationID, "message", val)
+		return
+	}
+	if err := o.agentSendMsg(ctx, conversationID, agent, val.ContentType, message); err != nil {
+		log.ZWarn(ctx, "sendMsg take agent", err, "agentUserID", agentUserID)
+	}
+}
+
+func (o *customerService) agentSendMsg(ctx context.Context, conversationID string, agent *model.Agent, contentType int32, content map[string]any) error {
+	req := &imapi.SendMsgReq{
+		SendID:           agent.UserID,
+		GroupID:          strings.TrimPrefix(conversationID, "sg_"),
+		SenderNickname:   agent.Nickname,
+		SenderFaceURL:    agent.FaceURL,
+		SenderPlatformID: constant2.AdminPlatformID,
+		SessionType:      constant2.ReadGroupChatType,
+		ContentType:      contentType,
+		Content:          content,
+	}
+	_, err := o.imApi.SendMsg(ctx, req)
+	return err
 }
 
 func (o *customerService) UpdateSendMsgTime(ctx context.Context, req *pb.UpdateSendMsgTimeReq) (*pb.UpdateSendMsgTimeResp, error) {
@@ -139,12 +150,13 @@ func (o *customerService) UpdateConversationClosed(ctx context.Context, req *pb.
 	}
 	if updated {
 		if req.Timeout {
-			err = o.sendMsg(ctx, req.ConversationID, o.config.Msg.Timeout)
+			o.agentSendConfigMessage(ctx, req.ConversationID, "", func(agent *model.Agent) *model.AgentMessage {
+				return agent.TimeoutMsg
+			})
 		} else {
-			err = o.sendMsg(ctx, req.ConversationID, o.config.Msg.Closed)
-		}
-		if err != nil {
-			log.ZError(ctx, "send closed msg", err, "req", req)
+			o.agentSendConfigMessage(ctx, req.ConversationID, "", func(agent *model.Agent) *model.AgentMessage {
+				return agent.EndMsg
+			})
 		}
 	}
 	return &pb.UpdateConversationClosedResp{}, nil

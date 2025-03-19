@@ -27,8 +27,8 @@ func (c *Conversation) Create(ctx context.Context, conversation *model.Conversat
 	return mongoutil.InsertOne(ctx, c.coll, conversation)
 }
 
-func (c *Conversation) Take(ctx context.Context, userID string, conversationID string) (*model.Conversation, error) {
-	return mongoutil.FindOne[*model.Conversation](ctx, c.coll, bson.M{"user_id": userID, "conversation_id": conversationID})
+func (c *Conversation) Take(ctx context.Context, conversationID string) (*model.Conversation, error) {
+	return mongoutil.FindOne[*model.Conversation](ctx, c.coll, bson.M{"conversation_id": conversationID})
 }
 
 func (c *Conversation) TakeByUserID(ctx context.Context, userID string) (*model.Conversation, error) {
@@ -46,8 +46,10 @@ func (c *Conversation) getFilter(userID string, conversationID string, version i
 	return filter
 }
 
-func (c *Conversation) UpdateLastMsg(ctx context.Context, userID string, conversationID string, lastMsg *model.LastMessage) error {
-	filter := c.getFilter(userID, conversationID, -1)
+func (c *Conversation) UpdateLastMsg(ctx context.Context, conversationID string, lastMsg *model.LastMessage) error {
+	filter := bson.M{
+		"conversation_id": conversationID,
+	}
 	filter["$or"] = []bson.M{
 		{"last_msg": nil},
 		{"last_msg.send_time": bson.M{"$lt": lastMsg.SendTime}},

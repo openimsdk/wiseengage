@@ -1,4 +1,4 @@
-package customerservice
+package customerapi
 
 import (
 	"github.com/gin-gonic/gin"

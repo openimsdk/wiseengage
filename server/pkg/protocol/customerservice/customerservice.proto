@@ -1,5 +1,8 @@
 syntax = "proto3";
 package openim.wiseengage.customerservice;
+
+import "common/common.proto";
+
 option go_package = "github.com/openimsdk/wiseengage/v1/pkg/protocol/customerservice";
 
 
@@ -15,6 +18,7 @@ message RegisterCustomerResp {
 
 message StartConsultationReq {
   string userID = 1;
+  string agentType = 2;
 }
 
 message StartConsultationResp {
@@ -54,6 +58,65 @@ message ChangeConversationRoleResp {
   string role = 3;
 }
 
+message AgentMessage {
+  int32 contentType = 1;
+  string content = 2;
+}
+
+message AgentInfo {
+  string userID = 1;
+  string nickname = 2;
+  string faceURL = 3;
+  string agentType = 4;
+  int32 status = 5;
+  AgentMessage startMsg = 6;
+  AgentMessage endMsg = 7;
+  AgentMessage timeoutMsg = 8;
+  int64 createTime = 9;
+}
+
+message CreateAgentReq {
+  AgentInfo agent = 1;
+}
+
+message CreateAgentResp {
+}
+
+message UpdateAgentReq {
+  string userID = 1;
+  optional string nickname = 2;
+  optional string faceURL = 3;
+  optional int32 status = 4;
+  AgentMessage startMsg = 5;
+  AgentMessage endMsg = 6;
+  AgentMessage timeoutMsg = 7;
+}
+
+message UpdateAgentResp {
+}
+
+message PageFindAgentReq {
+  openim.wiseengage.common.RequestPagination pagination = 1;
+  repeated string status = 2;
+  repeated string agentTypes = 3;
+}
+
+message PageFindAgentResp {
+  int64 total = 1;
+  repeated AgentInfo Agents = 2;
+}
+
+message callbackAfterSendSingleMsgCommandReq {
+  string conversationID = 1;
+  string userID = 2;
+  string msgID = 3;
+  int64 sendTime = 4;
+  string content = 5;
+  int32 contentType = 6;
+}
+
+message callbackAfterSendSingleMsgCommandResp {}
+
 service customerservice {
   rpc RegisterCustomer (RegisterCustomerReq) returns (RegisterCustomerResp);
 
@@ -64,4 +127,10 @@ service customerservice {
   rpc UpdateConversationClosed(UpdateConversationClosedReq) returns (UpdateConversationClosedResp);
 
   rpc ChangeConversationRole(ChangeConversationRoleReq) returns (ChangeConversationRoleResp);
+
+  rpc CreateAgent(CreateAgentReq) returns (CreateAgentResp);
+  rpc UpdateAgent(UpdateAgentReq) returns (UpdateAgentResp);
+  rpc PageFindAgent(PageFindAgentReq) returns (PageFindAgentResp);
+
+  rpc callbackAfterSendSingleMsgCommand(callbackAfterSendSingleMsgCommandReq) returns (callbackAfterSendSingleMsgCommandResp);
 }

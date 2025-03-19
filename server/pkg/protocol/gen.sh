@@ -1,4 +1,5 @@
 PROTO_NAMES=(
+    "common"
     "customerservice"
 )
 

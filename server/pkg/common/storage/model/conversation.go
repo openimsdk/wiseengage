@@ -13,6 +13,7 @@ type LastMessage struct {
 
 type Conversation struct {
 	UserID         string       `bson:"user_id"`
+	AgentUserID    string       `bson:"agent_user_id"`
 	ConversationID string       `bson:"conversation_id"`
 	CreateTime     time.Time    `bson:"create_time"`
 	LastMsg        *LastMessage `bson:"last_msg"`

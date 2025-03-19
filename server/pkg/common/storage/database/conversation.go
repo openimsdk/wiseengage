@@ -8,9 +8,10 @@ import (
 )
 
 type Conversation interface {
+	Take(ctx context.Context, conversationID string) (*model.Conversation, error)
 	Create(ctx context.Context, conversation *model.Conversation) error
 	TakeByUserID(ctx context.Context, userID string) (*model.Conversation, error)
-	UpdateLastMsg(ctx context.Context, userID string, conversationID string, lastMsg *model.LastMessage) error
+	UpdateLastMsg(ctx context.Context, conversationID string, lastMsg *model.LastMessage) error
 	SetStatusOpen(ctx context.Context, userID string, conversationID string, version int, role string) (bool, error)
 	SetStatusClosed(ctx context.Context, userID string, conversationID string, version int, cause string) (bool, error)
 	SetStatusTimeoutClosed(ctx context.Context, userID string, conversationID string, lastMsg *model.LastMessage, cause string) (bool, error)

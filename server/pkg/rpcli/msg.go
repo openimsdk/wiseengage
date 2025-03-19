@@ -56,8 +56,9 @@ func (x *MsgClient) SetUserConversationMin(ctx context.Context, conversationID s
 }
 
 func (x *MsgClient) GetLastMessageSeqByTime(ctx context.Context, conversationID string, lastTime int64) (int64, error) {
-	req := &msg.GetLastMessageSeqByTimeReq{ConversationID: conversationID, Time: lastTime}
-	return extractField(ctx, x.MsgClient.GetLastMessageSeqByTime, req, (*msg.GetLastMessageSeqByTimeResp).GetSeq)
+	//req := &msg.GetLastMessageSeqByTimeReq{ConversationID: conversationID, Time: lastTime}
+	//return extractField(ctx, x.MsgClient.GetLastMessageSeqByTime, req, (*msg.GetLastMessageSeqByTimeResp).GetSeq)
+	return 0, nil
 }
 
 func (x *MsgClient) GetConversationMaxSeq(ctx context.Context, conversationID string) (int64, error) {
