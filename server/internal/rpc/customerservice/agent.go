@@ -8,18 +8,22 @@ import (
 	"github.com/openimsdk/protocol/sdkws"
 	"github.com/openimsdk/tools/errs"
 	"github.com/openimsdk/tools/utils/datautil"
+	"github.com/openimsdk/wiseengage/v1/pkg/common/constant"
 	"github.com/openimsdk/wiseengage/v1/pkg/common/convert"
 	"github.com/openimsdk/wiseengage/v1/pkg/common/storage/model"
 	"github.com/openimsdk/wiseengage/v1/pkg/protocol/customerservice"
 )
 
 func (o *customerService) CreateAgent(ctx context.Context, req *customerservice.CreateAgentReq) (*customerservice.CreateAgentResp, error) {
+	if req.Agent == nil {
+		return nil, errs.ErrArgs.WrapMsg("agent cannot be nil")
+	}
 	imToken, err := o.imApi.ImAdminTokenWithDefaultAdmin(ctx)
 	if err != nil {
 		return nil, err
 	}
 	ctx = mctx.WithApiToken(ctx, imToken)
-	if req.Agent.UserID == "" {
+	if req.Agent.UserID != "" {
 		users, err := o.imApi.GetUsers(ctx, []string{req.Agent.UserID})
 		if err != nil {
 			return nil, err
@@ -27,6 +31,7 @@ func (o *customerService) CreateAgent(ctx context.Context, req *customerservice.
 		if len(users) > 0 {
 			return nil, errs.ErrDuplicateKey.WrapMsg("agent userID already exists")
 		}
+		req.Agent.UserID += constant.AgentUserIDPrefix
 	} else {
 		randUserIDs := make([]string, 5)
 		for i := range randUserIDs {
@@ -37,7 +42,7 @@ func (o *customerService) CreateAgent(ctx context.Context, req *customerservice.
 			return nil, err
 		}
 		if len(users) == len(randUserIDs) {
-			return nil, errs.ErrDuplicateKey.WrapMsg("gen agent userID already exists")
+			return nil, errs.ErrDuplicateKey.WrapMsg("gen agent userID already exists, please try again")
 		}
 		for _, user := range users {
 			if datautil.Contain(user.UserID, randUserIDs...) {

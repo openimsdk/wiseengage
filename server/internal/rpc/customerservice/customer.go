@@ -3,13 +3,13 @@ package customerservice
 import (
 	"context"
 	"crypto/rand"
-	"errors"
 	"time"
 
 	"github.com/openimsdk/chat/pkg/common/mctx"
 	"github.com/openimsdk/protocol/sdkws"
 	"github.com/openimsdk/tools/errs"
-	"github.com/openimsdk/wiseengage/v1/pkg/common/servererrs"
+	"github.com/openimsdk/tools/utils/datautil"
+	"github.com/openimsdk/wiseengage/v1/pkg/common/constant"
 	"github.com/openimsdk/wiseengage/v1/pkg/common/storage/controller"
 	"github.com/openimsdk/wiseengage/v1/pkg/common/storage/model"
 	"github.com/openimsdk/wiseengage/v1/pkg/protocol/customerservice"
@@ -22,45 +22,46 @@ func (o *customerService) RegisterCustomer(ctx context.Context, req *customerser
 		return nil, err
 	}
 	ctx = mctx.WithApiToken(ctx, imToken)
-	imReg := false
 	if req.UserID != "" {
-		exist, err := o.db.CustomerExist(ctx, req.UserID)
+		users, err := o.imApi.GetUsers(ctx, []string{req.UserID})
 		if err != nil {
 			return nil, err
 		}
-		if exist {
-			return nil, servererrs.ErrRegisteredAlready.Wrap()
+		if len(users) > 0 {
+			return nil, errs.ErrDuplicateKey.WrapMsg("customer userID already exists")
 		}
-		u, err := o.imApi.GetUserInfo(ctx, req.UserID)
+		req.UserID += constant.CustomerUserIDPrefix
+	} else {
+		randUserIDs := make([]string, 5)
+		for i := range randUserIDs {
+			randUserIDs[i] = constant.CustomerUserIDPrefix + genID(10)
+		}
+		users, err := o.imApi.GetUsers(ctx, []string{req.UserID})
 		if err != nil {
-			if !errors.Is(err, errs.ErrRecordNotFound) {
-				return nil, err
+			return nil, err
+		}
+		if len(users) == len(randUserIDs) {
+			return nil, errs.ErrDuplicateKey.WrapMsg("gen customer userID already exists, please try again")
+		}
+		for _, user := range users {
+			if datautil.Contain(user.UserID, randUserIDs...) {
+				continue
 			}
-			if req.UserID == "" {
-				req.UserID, err = o.genCustomerUserID(ctx)
-				if err != nil {
-					return nil, err
-				}
-			}
-		} else {
-			imReg = true
-			req.UserID = u.UserID
+			req.UserID = user.UserID
+			break
 		}
 	}
-
-	if !imReg {
-		_, err := o.imApi.UserRegister(ctx, []*sdkws.UserInfo{
-			{
-				UserID:     req.UserID,
-				Nickname:   req.NickName,
-				FaceURL:    req.FaceURL,
-				Ex:         req.Ex,
-				CreateTime: now.UnixMilli(),
-			},
-		})
-		if err != nil {
-			return nil, errs.WrapMsg(err, "im register err")
-		}
+	_, err = o.imApi.UserRegister(ctx, []*sdkws.UserInfo{
+		{
+			UserID:     req.UserID,
+			Nickname:   req.NickName,
+			FaceURL:    req.FaceURL,
+			Ex:         req.Ex,
+			CreateTime: now.UnixMilli(),
+		},
+	})
+	if err != nil {
+		return nil, errs.WrapMsg(err, "im register err")
 	}
 
 	err = o.db.CustomerCreate(ctx, &model.Customer{
