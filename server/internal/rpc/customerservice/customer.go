@@ -6,6 +6,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/openimsdk/chat/pkg/common/mctx"
 	"github.com/openimsdk/protocol/sdkws"
 	"github.com/openimsdk/tools/errs"
 	"github.com/openimsdk/wiseengage/v1/pkg/common/servererrs"
@@ -16,7 +17,11 @@ import (
 
 func (o *customerService) RegisterCustomer(ctx context.Context, req *customerservice.RegisterCustomerReq) (*customerservice.RegisterCustomerResp, error) {
 	now := time.Now()
-
+	imToken, err := o.imApi.ImAdminTokenWithDefaultAdmin(ctx)
+	if err != nil {
+		return nil, err
+	}
+	ctx = mctx.WithApiToken(ctx, imToken)
 	imReg := false
 	if req.UserID != "" {
 		exist, err := o.db.CustomerExist(ctx, req.UserID)
@@ -32,7 +37,7 @@ func (o *customerService) RegisterCustomer(ctx context.Context, req *customerser
 				return nil, err
 			}
 			if req.UserID == "" {
-				req.UserID, err = o.genUserID(ctx)
+				req.UserID, err = o.genCustomerUserID(ctx)
 				if err != nil {
 					return nil, err
 				}
@@ -58,7 +63,7 @@ func (o *customerService) RegisterCustomer(ctx context.Context, req *customerser
 		}
 	}
 
-	err := o.db.CustomerCreate(ctx, &model.Customer{
+	err = o.db.CustomerCreate(ctx, &model.Customer{
 		UserID:     req.UserID,
 		NickName:   req.NickName,
 		FaceURL:    req.FaceURL,
@@ -72,10 +77,10 @@ func (o *customerService) RegisterCustomer(ctx context.Context, req *customerser
 	return &customerservice.RegisterCustomerResp{UserID: req.UserID}, nil
 }
 
-func (o *customerService) genUserID(ctx context.Context) (string, error) {
+func (o *customerService) genCustomerUserID(ctx context.Context) (string, error) {
 	const l = 10
 	for i := 0; i < 20; i++ {
-		userID := genID(l)
+		userID := "cu" + genID(l)
 		_, err := o.db.CustomerTake(ctx, userID)
 		if err == nil {
 			continue
@@ -99,5 +104,5 @@ func genID(l int) string {
 			data[i] = chars[data[i]%10]
 		}
 	}
-	return "cu" + string(data)
+	return string(data)
 }

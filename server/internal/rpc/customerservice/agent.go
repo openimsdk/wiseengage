@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/openimsdk/chat/pkg/common/mctx"
 	"github.com/openimsdk/protocol/sdkws"
 	"github.com/openimsdk/tools/errs"
 	"github.com/openimsdk/tools/utils/datautil"
@@ -13,6 +14,11 @@ import (
 )
 
 func (o *customerService) CreateAgent(ctx context.Context, req *customerservice.CreateAgentReq) (*customerservice.CreateAgentResp, error) {
+	imToken, err := o.imApi.ImAdminTokenWithDefaultAdmin(ctx)
+	if err != nil {
+		return nil, err
+	}
+	ctx = mctx.WithApiToken(ctx, imToken)
 	if req.Agent.UserID == "" {
 		users, err := o.imApi.GetUsers(ctx, []string{req.Agent.UserID})
 		if err != nil {
@@ -24,7 +30,7 @@ func (o *customerService) CreateAgent(ctx context.Context, req *customerservice.
 	} else {
 		randUserIDs := make([]string, 5)
 		for i := range randUserIDs {
-			randUserIDs[i] = genID(10)
+			randUserIDs[i] = "bot_" + genID(10)
 		}
 		users, err := o.imApi.GetUsers(ctx, []string{req.Agent.UserID})
 		if err != nil {
