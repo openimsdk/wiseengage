@@ -35,7 +35,7 @@ func (o *customerService) CreateAgent(ctx context.Context, req *customerservice.
 	} else {
 		randUserIDs := make([]string, 5)
 		for i := range randUserIDs {
-			randUserIDs[i] = "bot_" + genID(10)
+			randUserIDs[i] = constant.AgentUserIDPrefix + genID(10)
 		}
 		users, err := o.imApi.GetUsers(ctx, []string{req.Agent.UserID})
 		if err != nil {
