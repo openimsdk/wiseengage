@@ -44,11 +44,12 @@ func (o *customerService) CreateAgent(ctx context.Context, req *customerservice.
 		if len(users) == len(randUserIDs) {
 			return nil, errs.ErrDuplicateKey.WrapMsg("gen agent userID already exists, please try again")
 		}
-		for _, user := range users {
-			if datautil.Contain(user.UserID, randUserIDs...) {
+		userIDs := datautil.Batch(func(u *sdkws.UserInfo) string { return u.UserID }, users)
+		for _, uid := range randUserIDs {
+			if datautil.Contain(uid, userIDs...) {
 				continue
 			}
-			req.Agent.UserID = user.UserID
+			req.Agent.UserID = uid
 			break
 		}
 	}
